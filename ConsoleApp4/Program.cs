@@ -8,8 +8,8 @@ namespace ConsoleApp4
         public bool RandomInput = false;
         //number of layers
         public Neuron[] InputLayer = new Neuron[3];
-        public Neuron[] InnerLayer = new Neuron[7];
-        public Neuron[] InnerLayer2 = new Neuron[10];
+        public Neuron[] InnerLayer = new Neuron[4];
+        public Neuron[] InnerLayer2 = new Neuron[5];
         public Neuron[] OutputLayer = new Neuron[1];
         //training values
         private double[,] InputValues = new double[4, 3]{
@@ -126,13 +126,13 @@ namespace ConsoleApp4
                 Console.WriteLine("-------------------\nActivating second inner layer\n");
                 for (int x = 0; x < InnerLayer2.Length; x++)
                 {
-                    InnerLayer2[x].Value = Sigmoid(InnerLayer2[x].Value+InnerLayer2[x].Bias);
+                    InnerLayer2[x].Value = Sigmoid(InnerLayer2[x].Value + InnerLayer2[x].Bias);
                     InnerLayer2[x].Work(x);
                 }
                 Console.WriteLine("-------------------\nActivating output layer\n");
                 for (int x = 0; x < OutputLayer.Length; x++)
                 {
-                    Console.WriteLine("OUTPUT IS " + OutputLayer[x].Value+"\n");
+                    Console.WriteLine("OUTPUT IS " + OutputLayer[x].Value + "\n");
                     OutputValuesLearned[inputValuesCounter - 1, x] = OutputLayer[x].Value;
                 }
                 Display2DArray(OutputValuesLearned);
