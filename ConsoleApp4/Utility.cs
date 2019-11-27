@@ -6,13 +6,13 @@ namespace ConsoleApp4
     {
         public static double Sigmoid(double x)
         {
-            double y = (1 / (1 + Math.Exp(Math.Round(-x))));
+            double y = (1 / (1 + Math.Exp(-x)));
             Console.WriteLine("Sigmoided " + x + " to " + y);
             return y;
         }
         public static double SigmoidDerivative(double sigmoid)
         {
-            Console.WriteLine("Sigmoid derivative of " + sigmoid + " is " + (sigmoid * (1 - sigmoid)));
+            Console.WriteLine("Derivative of " + sigmoid + " is " + (sigmoid * (1 - sigmoid)));
             return (sigmoid * (1 - sigmoid));
         }
 
@@ -56,7 +56,7 @@ namespace ConsoleApp4
                 Console.Write("Neuron [" + y + "] ");
                 Console.Write("V=(" + Math.Round(neuronLayers[layer].neurons[y].Value, 2) + ") ");
                 Console.Write("B=(" + Math.Round(neuronLayers[layer].neurons[y].Bias, 2) + ") ");
-                Console.Write("oE=(" + Math.Round(neuronLayers[layer].neurons[y].OutputE, 4) + ") \n");
+                Console.Write("oE=(" + Math.Round(neuronLayers[layer].neurons[y].E, 4) + ") \n");
                 if (layer > 0) for (int z = 0; z < neuronLayers[layer - 1].neurons.Count; z++)
                     {
                         Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[layer].neurons[y].Weights[z], 2) + ") ");
@@ -72,13 +72,13 @@ namespace ConsoleApp4
             Console.WriteLine("Clearing values");
             for (int x = 0; x < neuronLayers.Length; x++)
             {
-                Console.Write("[" + x + "]");
+                //Console.Write("[" + x + "]");
                 for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
                 {
-                    Console.Write(" (" + Math.Round(neuronLayers[x].neurons[y].Value, 2) + ")");
+                    //Console.Write(" (" + Math.Round(neuronLayers[x].neurons[y].Value, 2) + ")");
                     neuronLayers[x].neurons[y].Value = 0;
                 }
-                Console.Write(" cleared\n");
+                //Console.Write(" cleared\n");
             }
         }
 
@@ -86,7 +86,7 @@ namespace ConsoleApp4
         public static double GetRandom()
         {
             Random random = new Random();
-            return Math.Round(random.NextDouble() * 2 - 1, 6);
+            return (random.NextDouble()*2 - 1);
         }
 
         public double[,] ArraySum(double[,] arrayA, double[,] arrayB)
