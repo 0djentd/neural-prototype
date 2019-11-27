@@ -17,8 +17,8 @@ namespace ConsoleApp4
         private Neuron[] parents;
         private double bias = 0;
         //for neuron's parents
-        private double[] weights = new double[128];
-        private double[] error = new double[128];
+        private double[] weights = new double[512];
+        private double[] error = new double[512];
         private double e;
 
         public double Value { get => value; set => this.value = value; }
@@ -43,7 +43,7 @@ namespace ConsoleApp4
 
         public void zL()
         {
-            this.Value = Utility.Sigmoid(this.Value+this.Bias);
+            this.Value = Functions.Sigmoid(this.Value+this.Bias);
         }
 
         public void Init()

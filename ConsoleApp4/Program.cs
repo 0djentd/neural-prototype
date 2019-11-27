@@ -7,10 +7,13 @@ namespace ConsoleApp4
     {
         //random training input for testing
         private bool RandomInput = true;
+
         //number of layers
         private int layersNum;
+
         //number of neurones in each layer
         List<int> neuronNum = new List<int>();
+
         //training values
         private double[] InputValuesTraining = new double[3] { 1,0,0 };
         private double[] OutputValuesTraining = new double[2] { 1, 0 };
@@ -26,6 +29,9 @@ namespace ConsoleApp4
                 Console.WriteLine("Enter " + i + " layer neuron number :");
                 neuronNum.Add(Convert.ToInt32(Console.ReadLine()));
             }
+
+
+            //testing values
             /*
             layersNum = 3;
             neuronNum.Add(3);
@@ -33,21 +39,22 @@ namespace ConsoleApp4
             neuronNum.Add(2);
             */
 
-            //array of layers (which is arrays of neurones)
+            //Initializing array of layers (which is arrays of neurones)
             NeuronLayer[] neuronLayers = new NeuronLayer[layersNum];
             for (int x = 0; x < neuronLayers.Length; x++)
             {
-                Console.WriteLine("Initializing " + x + " layer");
+                Console.WriteLine("\n--- Initializing " + x + " layer ---\n");
                 neuronLayers[x] = new NeuronLayer();
                 for (int y = 0; y < neuronNum[x]; y++)
                 {
-                    Console.WriteLine("[" + x + "][" + y + "]" + "Initializing neuron");
+                    Console.WriteLine("[" + x + "][" + y + "] initializing neuron");
                     neuronLayers[x].neurons.Add(new Neuron());
                     neuronLayers[x].neurons[y].Bias = 0;
+
                     //applies "parent neurones" to all layers except first
                     if (x > 0)
                     {
-                        Console.WriteLine("[" + x + "][" + y + "]" + "Initializing parent neurons and weights");
+                        //Console.WriteLine("[" + x + "][" + y + "]" + "Initializing parent neurons and weights");
                         neuronLayers[x].neurons[y].Parents = neuronLayers[x - 1].neurons.ToArray();
                         neuronLayers[x].neurons[y].Init();
                     }
@@ -56,18 +63,20 @@ namespace ConsoleApp4
                 //applies "target neurones" to all layers except last one 
                 if (x < layersNum && x != 0)
                 {
-                    Console.WriteLine("Initializing " + (x - 1) + " layer targetNeurons list");
+                    //Console.WriteLine("Initializing " + (x - 1) + " layer targetNeurons list");
                     for (int y = 0; y < neuronNum[x - 1]; y++)
                     {
-                        Console.WriteLine("[" + (x - 1) + "][" + y + "]" + "Initializing targetNeurons ");
+                        //Console.WriteLine("[" + (x - 1) + "][" + y + "]" + "Initializing targetNeurons ");
                         neuronLayers[x - 1].neurons[y].TargetNeurons = neuronLayers[x].neurons.ToArray();
                     }
                 }
 
             }
 
-            Console.WriteLine("\nEnter training counter");
+            Utility.ShowNeuronMap(neuronLayers);
+            Console.WriteLine("\nEnter training counter:");
             Feedforward(neuronLayers, Convert.ToInt16(Console.ReadLine()));
+            Utility.ShowNeuronMap(neuronLayers);
         }
 
         public void Feedforward(NeuronLayer[] neuronLayers, int count)
@@ -110,8 +119,8 @@ namespace ConsoleApp4
                 }
 
 
-
-                //feed================================================
+                //                      FEED
+                //===================================================
                 for (int x = 0; x < neuronLayers.Length; x++)
                 {
                     for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
@@ -123,7 +132,9 @@ namespace ConsoleApp4
                 }
                 //===================================================
 
-                Utility.ShowNeuronMap(neuronLayers);
+
+
+                //Utility.ShowNeuronMap(neuronLayers);
                 /*
                 ErrorOut(neuronLayers, OutputValuesTraining);
                 Learn(neuronLayers);
