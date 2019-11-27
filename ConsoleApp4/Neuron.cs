@@ -27,13 +27,14 @@ namespace ConsoleApp4
         public double[] Weights { get => weights; set => weights = value; }
         public double[] Error { get => error; set => error = value; }
 
+        //x is representing working neurone's number in working layer
         public void Work(int x)
         {
-            Console.WriteLine("\nNeuron started. Value is " + this.Value + "\n");
+            //Console.WriteLine("\nNeuron started. Value is " + this.Value + "\n");
             for (int i = 0; i < TargetNeurons.Length; i++)
             {
-                Console.WriteLine("Target neuron weight is " + TargetNeurons[i].Weights[x]);
-                Console.WriteLine("Worked out " + TargetNeurons[i].Value + this.Value * TargetNeurons[i].Weights[x] + "\n");
+                //Console.WriteLine("Target neuron weight is " + TargetNeurons[i].Weights[x]);
+                //Console.WriteLine("Worked out " + TargetNeurons[i].Value + this.Value * TargetNeurons[i].Weights[x] + "\n");
                 TargetNeurons[i].Value = TargetNeurons[i].Value + this.Value * TargetNeurons[i].Weights[x];
             }
         }

@@ -38,7 +38,7 @@ namespace ConsoleApp4
                 neuronNum.Add(Convert.ToInt32(Console.ReadLine()));
             }
 
-            //array of layers (which is array of neurones)
+            //array of layers (which is arrays of neurones)
             NeuronLayer[] neuronLayers = new NeuronLayer[layersNum];
             for (int x = 0; x < neuronLayers.Length; x++)
             {
@@ -48,7 +48,8 @@ namespace ConsoleApp4
                 {
                     Console.WriteLine("[" + x + "][" + y + "]" + "Initializing neuron");
                     neuronLayers[x].neurons.Add(new Neuron());
-
+                    neuronLayers[x].neurons[y].Bias = Utility.GetRandom();
+                    //applies "parent neurones" to all layers except first
                     if (x > 0)
                     {
                         Console.WriteLine("[" + x + "][" + y + "]" + "Initializing parent neurons and weights");
@@ -57,6 +58,7 @@ namespace ConsoleApp4
                     }
                 }
 
+                //applies "target neurones" to all layers except last one 
                 if (x != layersNum && x != 0)
                 {
                     Console.WriteLine("Initializing " + (x - 1) + " layer targetNeurons list");
@@ -79,20 +81,38 @@ namespace ConsoleApp4
             int inputCycle = input.GetLength(0);
             for (int i = 0; i < count; i++)
             {
-                Console.WriteLine("\nFeed #" + i);
+                Console.WriteLine("\nFeed #" + i + "\n");
+
+                //input values
+                double[] inputValue = new double[neuronLayers[0].neurons.Count];
                 //double[] inputValue = Utility.Get0Dimension(input, inputCycle);
-                double[] inputValue = new double[] { 1, -0.4, 0.3 };
+                if (RandomInput == true)
+                {
+                    for (int h = 0; h < neuronLayers[0].neurons.Count; h++)
+                    {
+                        inputValue[h] = Utility.GetRandom();
+                    }
+                }
+                else
+                {
+                    //for testing proposes
+                    inputValue[0] = 0.1;
+                    inputValue[1]=0.4;
+                    inputValue[1] = -0.3;
+                }
                 for (int v = 0; v < inputValue.GetLength(0); v++)
                 {
                     neuronLayers[0].neurons[v].Value = inputValue[v];
                 }
 
+
+                //feed
                 for (int x = 0; x < neuronLayers.Length; x++)
                 {
                     for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
                     {
-                        if (x < neuronLayers.Length - 1) neuronLayers[x].neurons[y].Work(y);
                         Console.WriteLine("[" + x + "][" + y + "]");
+                        if (x < neuronLayers.Length - 1) neuronLayers[x].neurons[y].Work(y);
                     }
                 }
                 ClearValues(neuronLayers);
@@ -104,11 +124,13 @@ namespace ConsoleApp4
             Console.WriteLine("Clearing values");
             for (int x = 0; x < neuronLayers.Length; x++)
             {
+                Console.Write("[" + x + "]");
                 for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
                 {
-                    Console.WriteLine("[" + x + "][" + y + "] Value " + Math.Round(neuronLayers[x].neurons[y].Value, 4) + " cleared");
+                    Console.Write(" (" + Math.Round(neuronLayers[x].neurons[y].Value, 2)+")");
                     neuronLayers[x].neurons[y].Value = 0;
                 }
+                Console.Write(" cleared\n");
             }
         }
 
