@@ -1,8 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
-    class Neuron
+    public class NeuronLayer
+    {
+        public List<Neuron> neurons = new List<Neuron>();
+
+    }
+
+    public class Neuron
     {
         //for this neuron
         private double value;
