@@ -11,7 +11,7 @@ namespace ConsoleApp4
         }
         public static double SigmoidDerivative(double sigmoid)
         {
-            Console.WriteLine("Sigmoid derivative of " + sigmoid + " is " + (sigmoid*(1-sigmoid)));
+            Console.WriteLine("Sigmoid derivative of " + sigmoid + " is " + (sigmoid * (1 - sigmoid)));
             return (sigmoid * (1 - sigmoid));
         }
 
@@ -32,11 +32,11 @@ namespace ConsoleApp4
         public double[,] ArraySum(double[,] arrayA, double[,] arrayB)
         {
             double[,] arrayC = new double[arrayA.GetLength(0), arrayA.GetLength(1)];
-            for (int i =0; i<arrayC.GetLength(0); i++)
+            for (int i = 0; i < arrayC.GetLength(0); i++)
             {
-                for (int x = 0; x <arrayC.GetLength(1); x++)
+                for (int x = 0; x < arrayC.GetLength(1); x++)
                 {
-                    arrayC[x,i] = arrayA[x,i] + arrayB[x,i];
+                    arrayC[x, i] = arrayA[x, i] + arrayB[x, i];
                 }
             }
             return arrayC;
@@ -53,7 +53,7 @@ namespace ConsoleApp4
             }
             return arrayC;
         }
-        
+
         public double[,] ArrayMult(double[,] arrayA, double[,] arrayB)
         {
             double[,] arrayC = new double[arrayA.GetLength(0), arrayB.GetLength(1)];
@@ -93,7 +93,7 @@ namespace ConsoleApp4
         public static double[] Get0Dimension(double[,] arrayName, int z)
         {
             double[] result = new double[arrayName.GetLength(1)];
-            for (int i = 0; i<arrayName.GetLength(1); i++)
+            for (int i = 0; i < arrayName.GetLength(1); i++)
             {
                 result[i] = arrayName[z, i];
             }

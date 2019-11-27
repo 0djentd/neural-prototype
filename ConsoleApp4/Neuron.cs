@@ -43,7 +43,7 @@ namespace ConsoleApp4
             for (int i = 0; i < Parents.Length; i++)
             {
                 Weights[i] = Utility.GetRandom();
-                Console.WriteLine("Weight #" + i + " created (" + Math.Round(Weights[i],4) + ")");
+                Console.WriteLine("Weight #" + i + " created (" + Math.Round(Weights[i], 4) + ")");
             }
         }
     }
