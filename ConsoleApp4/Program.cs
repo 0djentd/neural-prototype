@@ -103,7 +103,7 @@ namespace ConsoleApp4
                     }
                     else
                     {
-                        InputLayer[x].Value = GetRandom();
+                        InputLayer[x].Value = Utility.GetRandom();
                     }
 
                 }
@@ -120,13 +120,13 @@ namespace ConsoleApp4
                 Console.WriteLine("-------------------\nActivating inner layer\n");
                 for (int x = 0; x < InnerLayer.Length; x++)
                 {
-                    InnerLayer[x].Value = Sigmoid(InnerLayer[x].Value + InnerLayer[x].Bias);
+                    InnerLayer[x].Value = Utility.Sigmoid(InnerLayer[x].Value + InnerLayer[x].Bias);
                     InnerLayer[x].Work(x);
                 }
                 Console.WriteLine("-------------------\nActivating second inner layer\n");
                 for (int x = 0; x < InnerLayer2.Length; x++)
                 {
-                    InnerLayer2[x].Value = Sigmoid(InnerLayer2[x].Value + InnerLayer2[x].Bias);
+                    InnerLayer2[x].Value = Utility.Sigmoid(InnerLayer2[x].Value + InnerLayer2[x].Bias);
                     InnerLayer2[x].Work(x);
                 }
                 Console.WriteLine("-------------------\nActivating output layer\n");
@@ -135,8 +135,8 @@ namespace ConsoleApp4
                     Console.WriteLine("OUTPUT IS " + OutputLayer[x].Value + "\n");
                     OutputValuesLearned[inputValuesCounter - 1, x] = OutputLayer[x].Value;
                 }
-                Display2DArray(OutputValuesLearned);
-                Display2DArray(OutputValues);
+                Utility.Display2DArray(OutputValuesLearned);
+                Utility.Display2DArray(OutputValues);
                 if (inputValuesCounter == 4) inputValuesCounter = 0;
                 ClearValues();
                 Console.WriteLine("\nDone.\n");
@@ -166,53 +166,8 @@ namespace ConsoleApp4
 
         static void Main(string[] args)
         {
-
             Program Prog = new Program();
             Prog.Init();
         }
-
-        public void Display2DArray(Array arrayName)
-        {
-            for (int i = 0; i < arrayName.GetLength(0); i++)
-            {
-                Console.Write("|");
-                for (int x = 0; x < arrayName.GetLength(1); x++)
-                {
-                    Console.Write(" " + arrayName.GetValue(i, x));
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-        }
-        public void DisplayArray(Array arrayName)
-        {
-            Console.Write("|");
-            for (int i = 0; i < arrayName.GetLength(0); i++)
-            {
-                Console.Write(" " + arrayName.GetValue(i));
-            }
-            Console.WriteLine();
-        }
-
-        public double Sigmoid(double x)
-        {
-            Console.WriteLine("Sigmoided " + x + " to " + (1 / (1 + Math.Exp(-x))));
-            return (1 / (1 + Math.Exp(-x)));
-        }
-
-        public double RelU(double x)
-        {
-            double y = x;
-            if (y < 0) y = 0;
-            Console.WriteLine("RelU " + x + " to " + y);
-            return y;
-        }
-
-        public static double GetRandom()
-        {
-            Random random = new Random();
-            return random.NextDouble() * 2 - 1;
-        }
-
     }
 }

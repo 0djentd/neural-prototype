@@ -32,7 +32,7 @@ namespace ConsoleApp4
 
             for (int i = 0; i < Parents.Length; i++)
             {
-                Weights[i] = Program.GetRandom();
+                Weights[i] = Utility.GetRandom();
                 Console.WriteLine("Weight #" + i + " created (" + Weights[i] + ")");
             }
         }
