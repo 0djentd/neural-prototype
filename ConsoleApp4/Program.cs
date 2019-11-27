@@ -95,7 +95,7 @@ namespace ConsoleApp4
                 }
                 else
                 {
-                    //for testing proposes
+                    //for testing purposes
                     inputValue[0] = 0.1;
                     inputValue[1]=0.4;
                     inputValue[1] = -0.3;
