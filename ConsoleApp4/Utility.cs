@@ -9,6 +9,11 @@ namespace ConsoleApp4
             Console.WriteLine("Sigmoided " + x + " to " + (1 / (1 + Math.Exp(-x))));
             return (1 / (1 + Math.Exp(-x)));
         }
+        public static double SigmoidDerivative(double sigmoid)
+        {
+            Console.WriteLine("Sigmoid derivative of " + sigmoid + " is " + (sigmoid*(1-sigmoid)));
+            return (sigmoid * (1 - sigmoid));
+        }
 
         public static double RelU(double x)
         {

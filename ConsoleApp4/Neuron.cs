@@ -4,17 +4,21 @@ namespace ConsoleApp4
 {
     class Neuron
     {
+        //for this neuron
         private double value;
         private Neuron[] targetNeurons;
-        private double[] weights = new double[128];
         private Neuron[] parents;
         private double bias = 0;
+        //for neuron's parents
+        private double[] weights = new double[128];
+        private double[] error = new double[128];
 
         public double Value { get => value; set => this.value = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }
-        public double[] Weights { get => weights; set => weights = value; }
         public Neuron[] Parents { get => parents; set => parents = value; }
         public double Bias { get => bias; set => bias = value; }
+        public double[] Weights { get => weights; set => weights = value; }
+        public double[] Error { get => error; set => error = value; }
 
         public void Work(int x)
         {
