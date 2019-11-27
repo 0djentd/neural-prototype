@@ -9,6 +9,7 @@ namespace ConsoleApp4
         private double[] weights = new double[1024];
         private Neuron[] parents;
         private double bias = 0;
+
         public double Value { get => value; set => this.value = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }
         public double[] Weights { get => weights; set => weights = value; }
@@ -29,7 +30,6 @@ namespace ConsoleApp4
         public void Init()
         {
             Console.WriteLine("Neuron creating random weights");
-
             for (int i = 0; i < Parents.Length; i++)
             {
                 Weights[i] = Utility.GetRandom();
