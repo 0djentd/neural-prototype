@@ -48,19 +48,19 @@ namespace ConsoleApp4
             }
             return arrayC;
         }
-        /*
-        public double[,] ArraySub(double[,] arrayA, double[,] arrayB)
+        
+        public double[,] ArrayMult(double[,] arrayA, double[,] arrayB)
         {
-            double[,] arrayC = new double[arrayA.GetLength(0), arrayA.GetLength(1)];
+            double[,] arrayC = new double[arrayA.GetLength(0), arrayB.GetLength(1)];
             for (int i = 0; i < arrayC.GetLength(0); i++)
             {
                 for (int x = 0; x < arrayC.GetLength(1); x++)
                 {
-                    arrayC[x, i] = arrayA[x, i] - arrayB[x, i];
+                    arrayC[x, i] = arrayA[x, i] * arrayB[i, x];
                 }
             }
             return arrayC;
-        }*/
+        }
 
         public static void Display2DArray(Array arrayName)
         {
