@@ -6,25 +6,14 @@ namespace ConsoleApp4
     class Program
     {
         //random training input for testing
-        private bool RandomInput = true;
+        private bool RandomInput = false;
         //number of layers
         private int layersNum;
         //number of neurones in each layer
         List<int> neuronNum = new List<int>();
         //training values
-        private double[,] InputValuesTraining = new double[4, 3]{
-            {1,0,0},
-            {1,1,0},
-            {1,1,1},
-            {0,0,0}
-        };
-        private double[,] OutputValuesTraining = new double[4, 1]
-        {
-            {0 },
-            {1 },
-            {1 },
-            {0 }
-        };
+        private double[] InputValuesTraining = new double[3] { 1,0,0 };
+        private double[] OutputValuesTraining = new double[2] { 1, 0 };
 
 
         //creating objects and giving them some info about other objects
@@ -72,68 +61,97 @@ namespace ConsoleApp4
             }
 
             Console.WriteLine("\nEnter training counter");
-            Feedforward(neuronLayers, InputValuesTraining, Convert.ToInt16(Console.ReadLine()));
+            Feedforward(neuronLayers, Convert.ToInt16(Console.ReadLine()));
         }
 
-        public void Feedforward(NeuronLayer[] neuronLayers, double[,] input, int count)
+        public void Feedforward(NeuronLayer[] neuronLayers, int count)
         {
             Console.WriteLine("Started feedforward");
-            int inputCycle = input.GetLength(0);
+            //int inputCycle = input.GetLength(0);
+            double[] inputValueRandom = new double[neuronLayers[0].neurons.Count];
+            if (RandomInput == true)
+            {
+                for (int h = 0; h < neuronLayers[0].neurons.Count; h++)
+                {
+                    inputValueRandom[h] = Utility.GetRandom();
+                }
+            }
+            //input values
+            double[] inputValue = new double[neuronLayers[0].neurons.Count];
+            //double[] inputValue = Utility.Get0Dimension(input, inputCycle);
             for (int i = 0; i < count; i++)
             {
                 Console.WriteLine("\nFeed #" + i + "\n");
-
-                //input values
-                double[] inputValue = new double[neuronLayers[0].neurons.Count];
-                //double[] inputValue = Utility.Get0Dimension(input, inputCycle);
                 if (RandomInput == true)
                 {
                     for (int h = 0; h < neuronLayers[0].neurons.Count; h++)
                     {
-                        inputValue[h] = Utility.GetRandom();
+                        inputValue[h] = inputValueRandom[h];
                     }
                 }
                 else
                 {
                     //for testing purposes
                     inputValue[0] = 0.1;
-                    inputValue[1]=0.4;
-                    inputValue[1] = -0.3;
+                    inputValue[1] = 0.4;
+                    inputValue[2] = -0.3;
                 }
                 for (int v = 0; v < inputValue.GetLength(0); v++)
                 {
                     neuronLayers[0].neurons[v].Value = inputValue[v];
                 }
 
-
                 //feed
                 for (int x = 0; x < neuronLayers.Length; x++)
                 {
                     for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
                     {
-                        Console.WriteLine("[" + x + "][" + y + "]");
+                        //Console.WriteLine("[" + x + "][" + y + "]");
                         if (x < neuronLayers.Length - 1) neuronLayers[x].neurons[y].Work(y);
                     }
                 }
-                ClearValues(neuronLayers);
+                Utility.ShowNeuronMap(neuronLayers, 2);
+                Backpropagation(neuronLayers, OutputValuesTraining);
+                Learn(neuronLayers);
+                //Utility.ShowNeuronMap(neuronLayers);
+                //Utility.ClearValues(neuronLayers);
             }
         }
 
-        public void ClearValues(NeuronLayer[] neuronLayers)
+        public void Learn(NeuronLayer[] neuronLayers)
         {
-            Console.WriteLine("Clearing values");
+            Console.WriteLine("=====STARTED LEARNING!=====");
             for (int x = 0; x < neuronLayers.Length; x++)
             {
-                Console.Write("[" + x + "]");
                 for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
                 {
-                    Console.Write(" (" + Math.Round(neuronLayers[x].neurons[y].Value, 2)+")");
-                    neuronLayers[x].neurons[y].Value = 0;
+                    for (int z = 0; z < neuronLayers[x].neurons[y].Weights.Length; z++)
+                    {
+                        Console.Write("\n[" + x + "][" + y + "] W["+z+"] (" + Math.Round(neuronLayers[x].neurons[y].Weights[z], 2) + ") -> (");
+                        neuronLayers[x].neurons[y].Weights[z] += neuronLayers[x].neurons[y].Error[z];
+                        Console.Write(Math.Round(neuronLayers[x].neurons[y].Weights[z], 2) + ")");
+                    }
                 }
-                Console.Write(" cleared\n");
             }
         }
 
+        public void Backpropagation(NeuronLayer[] neuronLayers, double[] correctOutput)
+        {
+            ErrorOut(neuronLayers, correctOutput);
+        }
+
+        public void ErrorOut(NeuronLayer[] neuronLayers, double[] correctOutput)
+        {
+            double[] errorOut = new double[neuronLayers[neuronLayers.Length - 1].neurons.Count];
+            for (int i = 0; i< neuronLayers[neuronLayers.Length - 1].neurons.Count; i++)
+            {
+                errorOut[i] = Math.Pow((neuronLayers[neuronLayers.Length - 1].neurons[i].Value - correctOutput[i]), 2);
+                neuronLayers[neuronLayers.Length - 1].neurons[i].E = errorOut[i];
+            }
+            Utility.ShowNeuronMap(neuronLayers, neuronLayers.Length - 1);
+        }
+
+        
         static void Main(string[] args)
         {
             Program Prog = new Program();

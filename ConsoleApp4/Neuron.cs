@@ -19,6 +19,7 @@ namespace ConsoleApp4
         //for neuron's parents
         private double[] weights = new double[128];
         private double[] error = new double[128];
+        private double outputE;
 
         public double Value { get => value; set => this.value = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }
@@ -26,6 +27,7 @@ namespace ConsoleApp4
         public double Bias { get => bias; set => bias = value; }
         public double[] Weights { get => weights; set => weights = value; }
         public double[] Error { get => error; set => error = value; }
+        public double OutputE { get => outputE; set => outputE = value; }
 
         //x is representing working neurone's number in working layer
         public void Work(int x)
