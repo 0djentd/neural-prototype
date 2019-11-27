@@ -89,5 +89,15 @@ namespace ConsoleApp4
             }
             Console.WriteLine();
         }
+
+        public static double[] Get0Dimension(double[,] arrayName, int z)
+        {
+            double[] result = new double[arrayName.GetLength(1)];
+            for (int i = 0; i<arrayName.GetLength(1); i++)
+            {
+                result[i] = arrayName[z, i];
+            }
+            return result;
+        }
     }
 }

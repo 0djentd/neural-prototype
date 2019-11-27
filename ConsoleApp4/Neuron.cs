@@ -1,8 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
-    class Neuron
+    public class NeuronLayer
+    {
+        public List<Neuron> neurons = new List<Neuron>();
+
+    }
+
+    public class Neuron
     {
         //for this neuron
         private double value;
@@ -33,11 +40,10 @@ namespace ConsoleApp4
 
         public void Init()
         {
-            Console.WriteLine("Neuron creating random weights");
             for (int i = 0; i < Parents.Length; i++)
             {
                 Weights[i] = Utility.GetRandom();
-                Console.WriteLine("Weight #" + i + " created (" + Weights[i] + ")");
+                Console.WriteLine("Weight #" + i + " created (" + Math.Round(Weights[i],4) + ")");
             }
         }
     }
