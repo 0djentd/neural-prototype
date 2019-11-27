@@ -6,8 +6,9 @@ namespace ConsoleApp4
     {
         public static double Sigmoid(double x)
         {
-            Console.WriteLine("Sigmoided " + x + " to " + (1 / (1 + Math.Exp(-x))));
-            return (1 / (1 + Math.Exp(-x)));
+            double y = (1 / (1 + Math.Exp(Math.Round(-x))));
+            Console.WriteLine("Sigmoided " + x + " to " + y);
+            return y;
         }
         public static double SigmoidDerivative(double sigmoid)
         {
@@ -26,7 +27,7 @@ namespace ConsoleApp4
         public static double GetRandom()
         {
             Random random = new Random();
-            return random.NextDouble() * 2 - 1;
+            return Math.Round(random.NextDouble() * 2 - 1, 6);
         }
 
         public double[,] ArraySum(double[,] arrayA, double[,] arrayB)

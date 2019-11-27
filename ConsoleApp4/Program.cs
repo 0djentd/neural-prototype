@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 namespace ConsoleApp4
 {
     class Program
@@ -11,27 +12,19 @@ namespace ConsoleApp4
         //number of neurones in each layer
         List<int> neuronNum = new List<int>();
         //training values
-        private double[,] InputValues = new double[4, 3]{
+        private double[,] InputValuesTraining = new double[4, 3]{
             {1,0,0},
             {1,1,0},
             {1,1,1},
             {0,0,0}
         };
-        private double[,] OutputValues = new double[4, 1]
+        private double[,] OutputValuesTraining = new double[4, 1]
         {
             {0 },
             {1 },
             {1 },
             {0 }
         };
-        private double[,] OutputValuesLearned = new double[4, 1]
-        {
-            {0 },
-            {0 },
-            {0 },
-            {0 }
-        };
-
 
 
         //creating objects and giving them some info about other objects
@@ -77,7 +70,7 @@ namespace ConsoleApp4
             }
 
             Console.WriteLine("\nEnter training counter");
-            Feedforward(neuronLayers, InputValues, Convert.ToInt16(Console.ReadLine()));
+            Feedforward(neuronLayers, InputValuesTraining, Convert.ToInt16(Console.ReadLine()));
         }
 
         public void Feedforward(NeuronLayer[] neuronLayers, double[,] input, int count)
