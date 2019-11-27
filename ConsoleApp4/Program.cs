@@ -5,12 +5,12 @@ namespace ConsoleApp4
     class Program
     {
         //random training input for testing
-        public bool RandomInput = true;
+        private bool RandomInput = true;
         //number of layers
-        public Neuron[] InputLayer = new Neuron[12];
-        public Neuron[] InnerLayer = new Neuron[12];
-        public Neuron[] InnerLayer2 = new Neuron[12];
-        public Neuron[] OutputLayer = new Neuron[6];
+        private Neuron[] InputLayer = new Neuron[12];
+        private Neuron[] InnerLayer = new Neuron[12];
+        private Neuron[] InnerLayer2 = new Neuron[12];
+        private Neuron[] OutputLayer = new Neuron[6];
         //training values
         private double[,] InputValues = new double[4, 3]{
             {1,0,0},
@@ -142,6 +142,8 @@ namespace ConsoleApp4
                 Console.WriteLine("\nDone.\n");
             }
         }
+
+        
 
         public void ClearValues()
         {

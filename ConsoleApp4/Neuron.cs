@@ -6,7 +6,7 @@ namespace ConsoleApp4
     {
         private double value;
         private Neuron[] targetNeurons;
-        private double[] weights = new double[1024];
+        private double[] weights = new double[128];
         private Neuron[] parents;
         private double bias = 0;
 
