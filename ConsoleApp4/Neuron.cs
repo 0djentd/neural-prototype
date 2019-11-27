@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
@@ -43,7 +42,7 @@ namespace ConsoleApp4
 
         public void zL()
         {
-            this.Value = Functions.Sigmoid(this.Value+this.Bias);
+            this.Value = Functions.Sigmoid(this.Value + this.Bias);
         }
 
         public void Init()

@@ -15,7 +15,7 @@ namespace ConsoleApp4
         List<int> neuronNum = new List<int>();
 
         //training values
-        private double[] InputValuesTraining = new double[3] { 1,0,0 };
+        private double[] InputValuesTraining = new double[3] { 1, 0, 0 };
         private double[] OutputValuesTraining = new double[2] { 1, 0 };
 
 
@@ -152,7 +152,7 @@ namespace ConsoleApp4
                 {
                     for (int z = 0; z < neuronLayers[x].neurons[y].Weights.Length; z++)
                     {
-                        Console.Write("\n[" + x + "][" + y + "] W["+z+"] (" + Math.Round(neuronLayers[x].neurons[y].Weights[z], 4) + ") -> (");
+                        Console.Write("\n[" + x + "][" + y + "] W[" + z + "] (" + Math.Round(neuronLayers[x].neurons[y].Weights[z], 4) + ") -> (");
                         neuronLayers[x].neurons[y].Weights[z] += neuronLayers[x].neurons[y].E;
                         Console.Write(Math.Round(neuronLayers[x].neurons[y].Weights[z], 4) + ")");
                     }
@@ -185,7 +185,7 @@ namespace ConsoleApp4
         public void ErrorOut(NeuronLayer[] neuronLayers, double[] correctOutput)
         {
             double[] errorOut = new double[neuronLayers[neuronLayers.Length - 1].neurons.Count];
-            for (int i = 0; i< neuronLayers[neuronLayers.Length - 1].neurons.Count; i++)
+            for (int i = 0; i < neuronLayers[neuronLayers.Length - 1].neurons.Count; i++)
             {
                 errorOut[i] = Math.Pow((neuronLayers[neuronLayers.Length - 1].neurons[i].Value - correctOutput[i]), 2);
                 neuronLayers[neuronLayers.Length - 1].neurons[i].E = errorOut[i];
@@ -193,7 +193,7 @@ namespace ConsoleApp4
             Utility.ShowNeuronMap(neuronLayers, neuronLayers.Length - 1);
         }
 
-        
+
         static void Main(string[] args)
         {
             Program Prog = new Program();

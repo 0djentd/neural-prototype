@@ -67,7 +67,7 @@ namespace ConsoleApp4
         public static double GetRandom()
         {
             Random random = new Random();
-            return (random.NextDouble()*2 - 1);
+            return (random.NextDouble() * 2 - 1);
         }
 
         public double[,] ArraySum(double[,] arrayA, double[,] arrayB)
