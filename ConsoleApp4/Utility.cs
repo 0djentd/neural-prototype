@@ -1,5 +1,4 @@
 ﻿using System;
-
 namespace ConsoleApp4
 {
     class Utility
@@ -19,7 +18,7 @@ namespace ConsoleApp4
                     if (x > 0) for (int z = 0; z < neuronLayers[x - 1].neurons.Count; z++)
                         {
                             Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[x].neurons[y].WeightsFrom[z], 2) + ") ");
-                            Console.Write("E=(" + Math.Round(neuronLayers[x].neurons[y].ErrorFrom[z], 2) + ")\n");
+                            Console.Write("oW=(" + Math.Round(neuronLayers[x].neurons[y].Delta[z], 2) + ")\n");
                         }
                     Console.WriteLine();
                 }
@@ -40,8 +39,8 @@ namespace ConsoleApp4
                 Console.Write("oE=(" + Math.Round(neuronLayers[layer].neurons[y].E, 4) + ") \n");
                 if (layer > 0) for (int z = 0; z < neuronLayers[layer - 1].neurons.Count; z++)
                     {
-                        Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[layer].neurons[y].WeightsFrom[z], 2) + ") ");
-                        Console.Write("E=(" + Math.Round(neuronLayers[layer].neurons[y].ErrorFrom[z], 2) + ")\n");
+                        //Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[layer].neurons[y].WeightsFrom[z], 2) + ") ");
+                        //Console.Write("oW=(" + Math.Round(neuronLayers[layer].neurons[y].OldWeightsFrom[z], 2) + ")\n");
                     }
                 Console.WriteLine();
             }
@@ -60,6 +59,18 @@ namespace ConsoleApp4
                     neuronLayers[x].neurons[y].Value = 0;
                 }
                 //Console.Write(" cleared\n");
+            }
+        }
+
+        public static void CopyValues(NeuronLayer[] neuronLayers)
+        {
+            Console.WriteLine("Copying values of weight");
+            for (int x = 0; x < neuronLayers.Length; x++)
+            {
+                for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
+                {
+                    neuronLayers[x].neurons[y].OldWeightsFrom = neuronLayers[x].neurons[y].WeightsFrom;
+                }
             }
         }
 
