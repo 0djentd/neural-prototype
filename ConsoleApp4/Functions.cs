@@ -12,7 +12,7 @@ namespace ConsoleApp4
         }
         public static double SigmoidDerivative(double sigmoid)
         {
-            Console.WriteLine("Derivative of " + sigmoid + " is " + (sigmoid * (1 - sigmoid)));
+            //Console.WriteLine("Derivative of " + sigmoid + " is " + (sigmoid * (1 - sigmoid)));
             return (sigmoid * (1 - sigmoid));
         }
 

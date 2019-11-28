@@ -14,22 +14,28 @@ namespace ConsoleApp4
         private double value;
         private Neuron[] targetNeurons;
         private Neuron[] parents;
-        private double bias = 0;
+        private double bias = 1;
 
         //for neuron's parents
-        private double[] weights = new double[128];
-        private double[] recivedValue = new double[128];
-        private double[] error = new double[128];
+        private double[] weightsFrom = new double[32];
+        private double[] oldWeightsFrom = new double[32];
+        private double[] recivedValue = new double[32];
         private double e;
+
+        //for backpropagation
+        private double[] delta;
+        private double deltaSum;
 
         public double Value { get => value; set => this.value = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }
         public Neuron[] Parents { get => parents; set => parents = value; }
         public double Bias { get => bias; set => bias = value; }
-        public double[] WeightsFrom { get => weights; set => weights = value; }
-        public double[] ErrorFrom { get => error; set => error = value; }
+        public double[] WeightsFrom { get => weightsFrom; set => weightsFrom = value; }
         public double E { get => e; set => e = value; }
         public double[] RecivedValueFrom { get => recivedValue; set => recivedValue = value; }
+        public double[] Delta { get => delta; set => delta = value; }
+        public double DeltaSum { get => deltaSum; set => deltaSum = value; }
+        public double[] OldWeightsFrom { get => oldWeightsFrom; set => oldWeightsFrom = value; }
 
         //x is representing working neurone's number in working layer
         public void Work(int x)
@@ -47,6 +53,10 @@ namespace ConsoleApp4
 
         public void Z()
         {
+            /*for(int i = 0; i<this.WeightsFrom.Length; i++)
+            {
+                this.WeightsFrom[i] = Functions.Sigmoid(this.WeightsFrom[i])-1;
+            }*/
             this.Value = Functions.Sigmoid(this.Value + this.Bias);
         }
 
@@ -54,7 +64,7 @@ namespace ConsoleApp4
         {
             for (int i = 0; i < Parents.Length; i++)
             {
-                WeightsFrom[i] = Utility.GetRandom();
+                this.WeightsFrom[i] = Utility.GetRandom();
                 //Console.WriteLine("Weight #" + i + " created (" + Math.Round(Weights[i], 4) + ")");
             }
         }
