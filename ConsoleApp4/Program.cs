@@ -6,7 +6,7 @@ namespace ConsoleApp4
     class Program
     {
         //random training input for testing
-        private bool RandomInput = true;
+        private bool RandomInput = false;
 
         //number of layers
         private int layersNum;
@@ -14,30 +14,34 @@ namespace ConsoleApp4
         //number of neurones in each layer
         List<int> neuronNum = new List<int>();
 
+        //Learning rate
+        private double learningRate = 0.1;
+
         //training values
-        private double[] InputValuesTraining = new double[3] { 1, 0, 0 };
-        private double[] OutputValuesTraining = new double[2] { 1, 0 };
+        private readonly double[] InputValuesTraining = new double[3] { 1, 0, 0 };
+        private readonly double[] OutputValuesTraining = new double[2] { 1, 0};
 
 
         //creating objects and giving them some info about other objects
         public void Init()
         {
-            Console.WriteLine("Enter layers number >2:");
+            /*Console.WriteLine("Enter layers number >2:");
             layersNum = Convert.ToInt32(Console.ReadLine());
             for (int i = 0; i < layersNum; i++)
             {
                 Console.WriteLine("Enter " + i + " layer neuron number :");
                 neuronNum.Add(Convert.ToInt32(Console.ReadLine()));
-            }
+            }*/
 
 
             //testing values
-            /*
+            
             layersNum = 3;
             neuronNum.Add(3);
             neuronNum.Add(4);
             neuronNum.Add(2);
-            */
+
+            
 
             //Initializing array of layers (which is arrays of neurones)
             NeuronLayer[] neuronLayers = new NeuronLayer[layersNum];
@@ -110,8 +114,9 @@ namespace ConsoleApp4
                 {
                     //for testing purposes
                     inputValue[0] = 1;
-                    inputValue[1] = 0;
-                    inputValue[2] = 0;
+                    inputValue[1] = 0.2;
+                    inputValue[2] = -2;
+
                 }
                 for (int v = 0; v < inputValue.GetLength(0); v++)
                 {
@@ -126,20 +131,20 @@ namespace ConsoleApp4
                     for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
                     {
                         //Console.WriteLine("[" + x + "][" + y + "]");
-                        if (x > 0) neuronLayers[x].neurons[y].Z();
+                        neuronLayers[x].neurons[y].Z();
                         if (x < neuronLayers.Length - 1) neuronLayers[x].neurons[y].Work(y);
                     }
                 }
                 //===================================================
 
 
-
-                Utility.ShowNeuronMap(neuronLayers);
+                ErrorOut(neuronLayers, OutputValuesTraining);
+                //Utility.ShowNeuronMap(neuronLayers);
                 /*
                 ErrorOut(neuronLayers, OutputValuesTraining);
                 Learn(neuronLayers);
                 Utility.ShowNeuronMap(neuronLayers, 2);*/
-                //Utility.ClearValues(neuronLayers);
+                Utility.ClearValues(neuronLayers);
             }
         }
 
@@ -184,9 +189,15 @@ namespace ConsoleApp4
 
         public void ErrorOut(NeuronLayer[] neuronLayers, double[] correctOutput)
         {
+            double[] deltaSumOut = new double[neuronLayers[neuronLayers.Length - 1].neurons.Count];
             for (int i = 0; i < neuronLayers[neuronLayers.Length - 1].neurons.Count; i++)
             {
                 neuronLayers[neuronLayers.Length - 1].neurons[i].E = (correctOutput[i] - neuronLayers[neuronLayers.Length - 1].neurons[i].Value);
+                deltaSumOut[i] = Functions.SigmoidDerivative(neuronLayers[neuronLayers.Length - 1].neurons[i].Value) - neuronLayers[neuronLayers.Length - 1].neurons[i].E;
+                for (int y = 0; y < neuronLayers[neuronLayers.Length - 2].neurons.Count; y++)
+                {
+                    neuronLayers[neuronLayers.Length - 1].neurons[i].WeightsFrom[y] = neuronLayers[neuronLayers.Length-1].neurons[i].WeightsFrom[y] + ((deltaSumOut[i]/neuronLayers[neuronLayers.Length - 1].neurons[i].RecivedValueFrom[y]) * learningRate);
+                }
             }
             Utility.ShowNeuronMap(neuronLayers, neuronLayers.Length - 1);
         }
