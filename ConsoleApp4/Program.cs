@@ -15,7 +15,7 @@ namespace ConsoleApp4
         List<int> neuronNum = new List<int>();
 
         //Learning rate
-        private double learningRate = 0.1;
+        private double learningRate = 1;
 
         //training values
         private readonly double[,] InputValuesTraining = new double[4, 3] {
@@ -24,11 +24,11 @@ namespace ConsoleApp4
         { 1, 1, 1},
         { 0, 0, 0}
         };
-        private readonly double[,] OutputValuesTraining = new double[4, 1] {
-        { 0},
-        { 1},
-        { 1},
-        { 0}
+        private readonly double[,] OutputValuesTraining = new double[4, 3] {
+        { 0, 0, 1},
+        { 1, 1, 0},
+        { 0, 0, 1},
+        { 0, 1, 0}
         };
 
 
@@ -37,18 +37,18 @@ namespace ConsoleApp4
         {
             layersNum = 3;
             neuronNum.Add(3);
-            neuronNum.Add(6);
-            neuronNum.Add(1);
+            neuronNum.Add(5);
+            neuronNum.Add(3);
 
             //Initializing array of layers (which is arrays of neurones)
             NeuronLayer[] neuronLayers = new NeuronLayer[layersNum];
             for (int x = 0; x < neuronLayers.Length; x++)
             {
-                Console.WriteLine("\n--- Initializing " + x + " layer ---\n");
+                //Console.WriteLine("\n--- Initializing " + x + " layer ---\n");
                 neuronLayers[x] = new NeuronLayer();
                 for (int y = 0; y < neuronNum[x]; y++)
                 {
-                    Console.WriteLine("[" + x + "][" + y + "] initializing neuron");
+                    //Console.WriteLine("[" + x + "][" + y + "] initializing neuron");
                     neuronLayers[x].neurons.Add(new Neuron());
                     neuronLayers[x].neurons[y].Bias = 0;
                     //applies "parent neurones" to all layers except first
@@ -80,7 +80,7 @@ namespace ConsoleApp4
 
         public void Feedforward(NeuronLayer[] neuronLayers, int count)
         {
-            Console.WriteLine("Started feedforward");
+            //Console.WriteLine("Started feedforward");
             double[] inputValueRandom = new double[neuronLayers[0].neurons.Count];
 
             if (RandomInput == true)
@@ -96,11 +96,13 @@ namespace ConsoleApp4
             //double[] inputValue = Utility.Get0Dimension(input, inputCycle);
             for (int i = 0; i < count; i++)
             {
-                //countIn = 2;
+                countIn = 1;
+                /*
                 Console.WriteLine("\n==========");
                 Console.WriteLine("Feed #" + i);
                 Console.WriteLine("==========\n");
                 Console.WriteLine("Exercise #" + countIn + "\n");
+                */            
                 // in values
                 if (RandomInput == true)
                 {
@@ -131,80 +133,65 @@ namespace ConsoleApp4
                     }
 
                 }
-
-                //FEED
-                Console.WriteLine("Feed start.");
-                for (int x = 0; x < neuronLayers.Length; x++)
-                {
-                    for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
-                    {
-                        Console.WriteLine("[" + x + "][" + y + "]");
-                        if (x > 0) neuronLayers[x].neurons[y].Z();
-                        if (x < neuronLayers.Length - 1) neuronLayers[x].neurons[y].Work(y);
-                    }
-                }
-
-
-
+                Feed(neuronLayers);
                 //Utility.ShowNeuronMap(neuronLayers);
-                /*
-                ErrorOut(neuronLayers, OutputValuesTraining);
-                Learn(neuronLayers);
-                Utility.ShowNeuronMap(neuronLayers, 2);*/
-                Backpropagation(neuronLayers, outputValue);
+                //Utility.ShowNeuronMap(neuronLayers, 2);
+                Backpropagation(neuronLayers, outputValue, i);
+
                 countIn++;
                 if (countIn > 3) countIn = 0;
             }
         }
 
-        public void Backpropagation(NeuronLayer[] neuronLayers, double[] correctOutput)
+        public void Feed(NeuronLayer[] neuronLayers)
         {
-            Console.WriteLine("Backprop start.");
+            for (int x = 0; x < neuronLayers.Length; x++)
+            {
+                for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
+                {
+                    //Console.WriteLine("[" + x + "][" + y + "]");
+                    if (x > 0) neuronLayers[x].neurons[y].Z();
+                    if (x < neuronLayers.Length - 1) neuronLayers[x].neurons[y].Work(y);
+                }
+            }
+        }
+
+        public void Backpropagation(NeuronLayer[] neuronLayers, double[] correctOutput, int k)
+        {
+            //Console.WriteLine("Backprop start.");
             //Console.WriteLine("started backpropagation");
             Utility.CopyValues(neuronLayers);
             for (int i = 0; i < neuronLayers[^1].neurons.Count; i++)
             {
-                Console.WriteLine("out.");
+                //Console.WriteLine("out.");
                 neuronLayers[^1].neurons[i].OutE = correctOutput[i] - neuronLayers[^1].neurons[i].Value;
                 neuronLayers[^1].neurons[i].OutD = Functions.SigmoidDerivative(neuronLayers[^1].neurons[i].Value) * neuronLayers[^1].neurons[i].OutE;
                 for (int y = 0; y < neuronLayers[^2].neurons.Count; y++)
                 {
-                    Console.WriteLine("hidden.");
+                    //Console.WriteLine("hidden.");
                     neuronLayers[^1].neurons[i].Error[y] = (neuronLayers[^1].neurons[i].RecivedValueFrom[y] * neuronLayers[^1].neurons[i].OutD);
                     neuronLayers[^1].neurons[i].Delta[y] = neuronLayers[^1].neurons[i].Error[y] * Functions.SigmoidDerivative(neuronLayers[^1].neurons[i].RecivedValueFrom[y]);
                     neuronLayers[^1].neurons[i].WeightsFrom[y] += neuronLayers[^1].neurons[i].RecivedValueFrom[y] * neuronLayers[^1].neurons[i].OutD * learningRate;
                     DeepLearning(neuronLayers, neuronLayers.Length-2, y);
                 }
             }
-            Utility.ShowNeuronMap(neuronLayers);
-            //Utility.ShowNeuronMap(neuronLayers, neuronLayers.Length - 1);
+            //Utility.ShowNeuronMap(neuronLayers, neuronLayers.Length-1);
+
+            if (k == 0 | k == 1 | k == 2 | k == 3 | k == 3000) Utility.ShowNeuronMap(neuronLayers,2);
             Utility.ClearValues(neuronLayers);
-            Console.WriteLine("Backprop done.");
+            //Console.WriteLine("Backprop done.");
         }
 
         public void DeepLearning(NeuronLayer[] neuronLayers, int l, int i)
         {
             for (int y = 0; y < neuronLayers[l-1].neurons.Count; y++)
             {
-                Console.WriteLine("deep.");
-                neuronLayers[l].neurons[i].Error[y] = (neuronLayers[l].neurons[i].RecivedValueFrom[y] * neuronLayers[l].neurons[i].OutD);
+                //Console.WriteLine("deep.");
+                neuronLayers[l].neurons[i].Error[y] = (neuronLayers[l].neurons[i].RecivedValueFrom[y] * neuronLayers[l].neurons[i].Delta[y]);
                 neuronLayers[l].neurons[i].Delta[y] = neuronLayers[l].neurons[i].Error[y] * Functions.SigmoidDerivative(neuronLayers[l].neurons[i].RecivedValueFrom[y]);
-                neuronLayers[l].neurons[i].WeightsFrom[y] += neuronLayers[l].neurons[i].RecivedValueFrom[y] * neuronLayers[l].neurons[i].OutD * learningRate;
-                if (l<0) DeepLearning(neuronLayers, l-1, y);
+                neuronLayers[l].neurons[i].WeightsFrom[y] += neuronLayers[l].neurons[i].RecivedValueFrom[y] * neuronLayers[l].neurons[i].Delta[y] * learningRate;
+                if (l>1) DeepLearning(neuronLayers, l-1, y);
             }
-        }
-
-        public void Error(NeuronLayer[] neuronLayers, double[] correctOutput)
-        {
-            for (int x = neuronLayers.Length - 1; x < 0; x--)
-            {
-                for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
-                {
-                    neuronLayers[x].neurons[y].OutE = (correctOutput[y] - neuronLayers[x].neurons[y].Value);
-                    neuronLayers[x].neurons[y].DeltaSum = Functions.SigmoidDerivative(neuronLayers[x].neurons[y].Value) - neuronLayers[x].neurons[y].OutE;
-                }
-            }
-
         }
 
         static void Main(string[] args)
@@ -212,8 +199,8 @@ namespace ConsoleApp4
             Program Prog = new Program();
             NeuronLayer[] neuronNetwork = Prog.Init();
             Console.WriteLine("\nEnter training counter:");
-            Prog.Feedforward(neuronNetwork, Convert.ToInt16(Console.ReadLine()));
-
+            Prog.Feedforward(neuronNetwork, Convert.ToInt32(Console.ReadLine()));
+            Utility.ShowNeuronMap(neuronNetwork);
         }
     }
 }

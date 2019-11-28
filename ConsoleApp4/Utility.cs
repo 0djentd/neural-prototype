@@ -16,8 +16,11 @@ namespace ConsoleApp4
                     Console.Write("V=(" + Math.Round(neuronLayers[x].neurons[y].Value, 2) + ") ");
                     Console.Write("oE=(" + Math.Round(neuronLayers[x].neurons[y].OutE, 2) + ") ");
                     Console.Write("oD=(" + Math.Round(neuronLayers[x].neurons[y].OutD, 2) + ")\n");
+
                     if (x > 0) for (int z = 0; z < neuronLayers[x - 1].neurons.Count; z++)
                         {
+                            Console.Write("E=(" + Math.Round(neuronLayers[x].neurons[y].Error[z], 2) + ") ");
+                            Console.Write("D=(" + Math.Round(neuronLayers[x].neurons[y].Delta[z], 2) + ") ");
                             Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[x].neurons[y].WeightsFrom[z], 2) + ") ");
                             Console.Write("oldW[" + z + "]=(" + Math.Round(neuronLayers[x].neurons[y].OldWeightsFrom[z], 2) + ") \n");
                             //Console.Write("oW=(" + Math.Round(neuronLayers[x].neurons[y].Delta[z], 2) + ")\n");
@@ -51,7 +54,7 @@ namespace ConsoleApp4
 
         public static void ClearValues(NeuronLayer[] neuronLayers)
         {
-            Console.WriteLine("Clearing values");
+            //Console.WriteLine("Clearing values");
             for (int x = 0; x < neuronLayers.Length; x++)
             {
                 //Console.Write("[" + x + "]");

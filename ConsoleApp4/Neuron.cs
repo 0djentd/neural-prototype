@@ -6,7 +6,6 @@ namespace ConsoleApp4
     public class NeuronLayer
     {
         public List<Neuron> neurons = new List<Neuron>();
-
     }
 
     public class Neuron
@@ -26,8 +25,6 @@ namespace ConsoleApp4
         //for backpropagation
         private double[] error = new double[32];
         private double[] delta = new double[32];
-        private double deltaSum;
-        private double deltaOutSum;
 
         public double Value { get => value; set => this.value = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }
@@ -37,9 +34,7 @@ namespace ConsoleApp4
         public double OutE { get => e; set => e = value; }
         public double[] RecivedValueFrom { get => recivedValue; set => recivedValue = value; }
         public double[] Error { get => error; set => error = value; }
-        public double DeltaSum { get => deltaSum; set => deltaSum = value; }
         public double[] OldWeightsFrom { get => oldWeightsFrom; set => oldWeightsFrom = value; }
-        public double DeltaOutSum { get => deltaOutSum; set => deltaOutSum = value; }
         public double OutD { get; internal set; }
         public double[] Delta { get => delta; set => delta = value; }
 
@@ -63,9 +58,9 @@ namespace ConsoleApp4
             {
                 this.WeightsFrom[i] = Functions.Sigmoid(this.WeightsFrom[i])-1;
             }*/
-            Console.Write("\nZ [" + this.value + "]");
+            //Console.Write("\nZ [" + this.value + "]");
             this.Value = Functions.Sigmoid(this.Value + this.Bias);
-            Console.Write("--> [" + this.value + "]\n");
+            //Console.Write("--> [" + this.value + "]\n");
         }
 
         public void Init()
