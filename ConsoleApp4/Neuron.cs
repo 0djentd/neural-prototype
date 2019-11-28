@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
@@ -14,7 +15,7 @@ namespace ConsoleApp4
         private double value;
         private Neuron[] targetNeurons;
         private Neuron[] parents;
-        private double bias = 1;
+        private double bias = 0;
 
         //for neuron's parents
         private double[] weightsFrom = new double[32];
@@ -23,19 +24,24 @@ namespace ConsoleApp4
         private double e;
 
         //for backpropagation
-        private double[] delta;
+        private double[] error = new double[32];
+        private double[] delta = new double[32];
         private double deltaSum;
+        private double deltaOutSum;
 
         public double Value { get => value; set => this.value = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }
         public Neuron[] Parents { get => parents; set => parents = value; }
         public double Bias { get => bias; set => bias = value; }
         public double[] WeightsFrom { get => weightsFrom; set => weightsFrom = value; }
-        public double E { get => e; set => e = value; }
+        public double OutE { get => e; set => e = value; }
         public double[] RecivedValueFrom { get => recivedValue; set => recivedValue = value; }
-        public double[] Delta { get => delta; set => delta = value; }
+        public double[] Error { get => error; set => error = value; }
         public double DeltaSum { get => deltaSum; set => deltaSum = value; }
         public double[] OldWeightsFrom { get => oldWeightsFrom; set => oldWeightsFrom = value; }
+        public double DeltaOutSum { get => deltaOutSum; set => deltaOutSum = value; }
+        public double OutD { get; internal set; }
+        public double[] Delta { get => delta; set => delta = value; }
 
         //x is representing working neurone's number in working layer
         public void Work(int x)
@@ -57,7 +63,9 @@ namespace ConsoleApp4
             {
                 this.WeightsFrom[i] = Functions.Sigmoid(this.WeightsFrom[i])-1;
             }*/
+            Console.Write("\nZ [" + this.value + "]");
             this.Value = Functions.Sigmoid(this.Value + this.Bias);
+            Console.Write("--> [" + this.value + "]\n");
         }
 
         public void Init()

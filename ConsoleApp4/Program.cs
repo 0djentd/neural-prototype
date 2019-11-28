@@ -15,12 +15,12 @@ namespace ConsoleApp4
         List<int> neuronNum = new List<int>();
 
         //Learning rate
-        private double learningRate = 1;
+        private double learningRate = 0.1;
 
         //training values
         private readonly double[,] InputValuesTraining = new double[4, 3] {
         { 0, 1, 1},
-        { 1, 0, 0},
+        { 1, 0, 1},
         { 1, 1, 1},
         { 0, 0, 0}
         };
@@ -33,25 +33,12 @@ namespace ConsoleApp4
 
 
         //creating objects and giving them some info about other objects
-        public void Init()
+        public NeuronLayer[] Init()
         {
-            /*Console.WriteLine("Enter layers number >2:");
-            layersNum = Convert.ToInt32(Console.ReadLine());
-            for (int i = 0; i < layersNum; i++)
-            {
-                Console.WriteLine("Enter " + i + " layer neuron number :");
-                neuronNum.Add(Convert.ToInt32(Console.ReadLine()));
-            }*/
-
-
-            //testing values
-
             layersNum = 3;
             neuronNum.Add(3);
-            neuronNum.Add(32);
+            neuronNum.Add(6);
             neuronNum.Add(1);
-
-
 
             //Initializing array of layers (which is arrays of neurones)
             NeuronLayer[] neuronLayers = new NeuronLayer[layersNum];
@@ -64,7 +51,6 @@ namespace ConsoleApp4
                     Console.WriteLine("[" + x + "][" + y + "] initializing neuron");
                     neuronLayers[x].neurons.Add(new Neuron());
                     neuronLayers[x].neurons[y].Bias = 0;
-
                     //applies "parent neurones" to all layers except first
                     if (x > 0)
                     {
@@ -88,15 +74,13 @@ namespace ConsoleApp4
             }
 
             //Utility.ShowNeuronMap(neuronLayers);
-            Console.WriteLine("\nEnter training counter:");
-            Feedforward(neuronLayers, Convert.ToInt16(Console.ReadLine()));
             //Utility.ShowNeuronMap(neuronLayers);
+            return neuronLayers;
         }
 
         public void Feedforward(NeuronLayer[] neuronLayers, int count)
         {
             Console.WriteLine("Started feedforward");
-            //int inputCycle = input.GetLength(0);
             double[] inputValueRandom = new double[neuronLayers[0].neurons.Count];
 
             if (RandomInput == true)
@@ -112,10 +96,12 @@ namespace ConsoleApp4
             //double[] inputValue = Utility.Get0Dimension(input, inputCycle);
             for (int i = 0; i < count; i++)
             {
-
+                //countIn = 2;
                 Console.WriteLine("\n==========");
                 Console.WriteLine("Feed #" + i);
                 Console.WriteLine("==========\n");
+                Console.WriteLine("Exercise #" + countIn + "\n");
+                // in values
                 if (RandomInput == true)
                 {
                     for (int h = 0; h < neuronLayers[0].neurons.Count; h++)
@@ -131,6 +117,7 @@ namespace ConsoleApp4
                     }
 
                 }
+                // set in values as vaues of 1st layer
                 for (int v = 0; v < inputValue.GetLength(0); v++)
                 {
                     neuronLayers[0].neurons[v].Value = inputValue[v];
@@ -138,62 +125,73 @@ namespace ConsoleApp4
                 // out Values
                 if (RandomInput == false)
                 {
-                    for (int h = 0; h < neuronLayers[neuronLayers.Length - 1].neurons.Count; h++)
+                    for (int h = 0; h < neuronLayers[^1].neurons.Count; h++)
                     {
                         outputValue[h] = OutputValuesTraining[countIn, h];
                     }
 
                 }
 
-                //                      FEED
-                //===================================================
+                //FEED
+                Console.WriteLine("Feed start.");
                 for (int x = 0; x < neuronLayers.Length; x++)
                 {
                     for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
                     {
-                        //Console.WriteLine("[" + x + "][" + y + "]");
-                        neuronLayers[x].neurons[y].Z();
+                        Console.WriteLine("[" + x + "][" + y + "]");
+                        if (x > 0) neuronLayers[x].neurons[y].Z();
                         if (x < neuronLayers.Length - 1) neuronLayers[x].neurons[y].Work(y);
                     }
                 }
-                //===================================================
 
-                Utility.CopyValues(neuronLayers);
-                Backpropagation(neuronLayers, outputValue);
+
+
                 //Utility.ShowNeuronMap(neuronLayers);
                 /*
                 ErrorOut(neuronLayers, OutputValuesTraining);
                 Learn(neuronLayers);
                 Utility.ShowNeuronMap(neuronLayers, 2);*/
-                Utility.ClearValues(neuronLayers);
+                Backpropagation(neuronLayers, outputValue);
                 countIn++;
-                if (countIn > 2) countIn = 0;
+                if (countIn > 3) countIn = 0;
             }
         }
 
         public void Backpropagation(NeuronLayer[] neuronLayers, double[] correctOutput)
         {
-            ErrorOut(neuronLayers, correctOutput);
-        }
-
-        public void ErrorOut(NeuronLayer[] neuronLayers, double[] correctOutput)
-        {
+            Console.WriteLine("Backprop start.");
+            //Console.WriteLine("started backpropagation");
+            Utility.CopyValues(neuronLayers);
             for (int i = 0; i < neuronLayers[^1].neurons.Count; i++)
             {
-                neuronLayers[^1].neurons[i].E = (correctOutput[i] - neuronLayers[^1].neurons[i].Value);
-                neuronLayers[^1].neurons[i].DeltaSum += Functions.SigmoidDerivative(neuronLayers[^1].neurons[i].Value) - neuronLayers[^1].neurons[i].E;
+                Console.WriteLine("out.");
+                neuronLayers[^1].neurons[i].OutE = correctOutput[i] - neuronLayers[^1].neurons[i].Value;
+                neuronLayers[^1].neurons[i].OutD = Functions.SigmoidDerivative(neuronLayers[^1].neurons[i].Value) * neuronLayers[^1].neurons[i].OutE;
                 for (int y = 0; y < neuronLayers[^2].neurons.Count; y++)
                 {
-                    neuronLayers[^1].neurons[i].WeightsFrom[y] = neuronLayers[^1].neurons[i].WeightsFrom[y] + ((neuronLayers[^1].neurons[i].DeltaSum / neuronLayers[^1].neurons[i].RecivedValueFrom[y]) * learningRate);
-                    neuronLayers[^2].neurons[y].DeltaSum += neuronLayers[^1].neurons[i].DeltaSum / neuronLayers[^1].neurons[i].OldWeightsFrom[y] * Functions.SigmoidDerivative(neuronLayers[^2].neurons[i].Value);
-                    for (int z = 0; z < neuronLayers[^3].neurons.Count; z++)
-                    {
-                        neuronLayers[^2].neurons[y].WeightsFrom[z] = neuronLayers[^2].neurons[y].WeightsFrom[z] + ((neuronLayers[^2].neurons[y].DeltaSum / neuronLayers[^2].neurons[y].RecivedValueFrom[z]) * learningRate);
-                        neuronLayers[^3].neurons[z].DeltaSum += neuronLayers[^2].neurons[y].DeltaSum / neuronLayers[^2].neurons[y].OldWeightsFrom[z] * Functions.SigmoidDerivative(neuronLayers[^3].neurons[z].Value);
-                    }
+                    Console.WriteLine("hidden.");
+                    neuronLayers[^1].neurons[i].Error[y] = (neuronLayers[^1].neurons[i].RecivedValueFrom[y] * neuronLayers[^1].neurons[i].OutD);
+                    neuronLayers[^1].neurons[i].Delta[y] = neuronLayers[^1].neurons[i].Error[y] * Functions.SigmoidDerivative(neuronLayers[^1].neurons[i].RecivedValueFrom[y]);
+                    neuronLayers[^1].neurons[i].WeightsFrom[y] += neuronLayers[^1].neurons[i].RecivedValueFrom[y] * neuronLayers[^1].neurons[i].OutD * learningRate;
+                    DeepLearning(neuronLayers, neuronLayers.Length-2, y);
                 }
             }
-            Utility.ShowNeuronMap(neuronLayers, neuronLayers.Length - 1);
+            Utility.ShowNeuronMap(neuronLayers);
+            //Utility.ShowNeuronMap(neuronLayers, neuronLayers.Length - 1);
+            Utility.ClearValues(neuronLayers);
+            Console.WriteLine("Backprop done.");
+        }
+
+        public void DeepLearning(NeuronLayer[] neuronLayers, int l, int i)
+        {
+            for (int y = 0; y < neuronLayers[l-1].neurons.Count; y++)
+            {
+                Console.WriteLine("deep.");
+                neuronLayers[l].neurons[i].Error[y] = (neuronLayers[l].neurons[i].RecivedValueFrom[y] * neuronLayers[l].neurons[i].OutD);
+                neuronLayers[l].neurons[i].Delta[y] = neuronLayers[l].neurons[i].Error[y] * Functions.SigmoidDerivative(neuronLayers[l].neurons[i].RecivedValueFrom[y]);
+                neuronLayers[l].neurons[i].WeightsFrom[y] += neuronLayers[l].neurons[i].RecivedValueFrom[y] * neuronLayers[l].neurons[i].OutD * learningRate;
+                if (l<0) DeepLearning(neuronLayers, l-1, y);
+            }
         }
 
         public void Error(NeuronLayer[] neuronLayers, double[] correctOutput)
@@ -202,8 +200,8 @@ namespace ConsoleApp4
             {
                 for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
                 {
-                    neuronLayers[x].neurons[y].E = (correctOutput[y] - neuronLayers[x].neurons[y].Value);
-                    neuronLayers[x].neurons[y].DeltaSum = Functions.SigmoidDerivative(neuronLayers[x].neurons[y].Value) - neuronLayers[x].neurons[y].E;
+                    neuronLayers[x].neurons[y].OutE = (correctOutput[y] - neuronLayers[x].neurons[y].Value);
+                    neuronLayers[x].neurons[y].DeltaSum = Functions.SigmoidDerivative(neuronLayers[x].neurons[y].Value) - neuronLayers[x].neurons[y].OutE;
                 }
             }
 
@@ -212,7 +210,10 @@ namespace ConsoleApp4
         static void Main(string[] args)
         {
             Program Prog = new Program();
-            Prog.Init();
+            NeuronLayer[] neuronNetwork = Prog.Init();
+            Console.WriteLine("\nEnter training counter:");
+            Prog.Feedforward(neuronNetwork, Convert.ToInt16(Console.ReadLine()));
+
         }
     }
 }

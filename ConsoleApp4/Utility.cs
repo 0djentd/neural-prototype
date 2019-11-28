@@ -14,11 +14,13 @@ namespace ConsoleApp4
                 {
                     Console.Write("Neuron [" + y + "] ");
                     Console.Write("V=(" + Math.Round(neuronLayers[x].neurons[y].Value, 2) + ") ");
-                    Console.Write("B=(" + Math.Round(neuronLayers[x].neurons[y].Bias, 2) + ")\n");
+                    Console.Write("oE=(" + Math.Round(neuronLayers[x].neurons[y].OutE, 2) + ") ");
+                    Console.Write("oD=(" + Math.Round(neuronLayers[x].neurons[y].OutD, 2) + ")\n");
                     if (x > 0) for (int z = 0; z < neuronLayers[x - 1].neurons.Count; z++)
                         {
                             Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[x].neurons[y].WeightsFrom[z], 2) + ") ");
-                            Console.Write("oW=(" + Math.Round(neuronLayers[x].neurons[y].Delta[z], 2) + ")\n");
+                            Console.Write("oldW[" + z + "]=(" + Math.Round(neuronLayers[x].neurons[y].OldWeightsFrom[z], 2) + ") \n");
+                            //Console.Write("oW=(" + Math.Round(neuronLayers[x].neurons[y].Delta[z], 2) + ")\n");
                         }
                     Console.WriteLine();
                 }
@@ -29,14 +31,14 @@ namespace ConsoleApp4
 
         public static void ShowNeuronMap(NeuronLayer[] neuronLayers, int layer)
         {
-            Console.WriteLine("\n========= Neuron map ========\n");
-            Console.Write("----- Layer [" + layer + "] -----\n\n");
+            //Console.WriteLine("\n========= Neuron map ========\n");
+            //Console.Write("----- Layer [" + layer + "] -----\n\n");
             for (int y = 0; y < neuronLayers[layer].neurons.Count; y++)
             {
                 Console.Write("Neuron [" + y + "] ");
                 Console.Write("V=(" + Math.Round(neuronLayers[layer].neurons[y].Value, 2) + ") ");
-                Console.Write("B=(" + Math.Round(neuronLayers[layer].neurons[y].Bias, 2) + ") ");
-                Console.Write("oE=(" + Math.Round(neuronLayers[layer].neurons[y].E, 4) + ") \n");
+                //Console.Write("B=(" + Math.Round(neuronLayers[layer].neurons[y].Bias, 2) + ") ");
+                Console.Write("oE=(" + Math.Round(neuronLayers[layer].neurons[y].OutE, 4) + ") \n");
                 if (layer > 0) for (int z = 0; z < neuronLayers[layer - 1].neurons.Count; z++)
                     {
                         //Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[layer].neurons[y].WeightsFrom[z], 2) + ") ");
@@ -64,7 +66,7 @@ namespace ConsoleApp4
 
         public static void CopyValues(NeuronLayer[] neuronLayers)
         {
-            Console.WriteLine("Copying values of weight");
+            //Console.WriteLine("Copying values of weight to oldWeight");
             for (int x = 0; x < neuronLayers.Length; x++)
             {
                 for (int y = 0; y < neuronLayers[x].neurons.Count; y++)
