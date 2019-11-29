@@ -34,35 +34,29 @@ namespace ConsoleApp4
 
         public void Backpropagation(NeuronLayer[] nL, double[] correctOutput, int k)
         {
-            //Console.WriteLine("Backprop start.");
-            //Console.WriteLine("started backpropagation");
             Utility.CopyValues(nL);
             for (int i = 0; i < nL[^1].n.Count; i++)
             {
-                //Console.WriteLine("out.");
                 nL[^1].n[i].OutE = correctOutput[i] - nL[^1].n[i].Value;
                 nL[^1].n[i].OutD = Functions.SigmoidDerivative(nL[^1].n[i].Value) * nL[^1].n[i].OutE;
                 for (int y = 0; y < nL[^2].n.Count; y++)
                 {
-                    //Console.WriteLine("hidden.");
                     nL[^1].n[i].Error[y] = (nL[^1].n[i].RecivedValueFrom[y] * nL[^1].n[i].OutD);
                     nL[^1].n[i].Delta[y] = nL[^1].n[i].Error[y] * Functions.SigmoidDerivative(nL[^1].n[i].RecivedValueFrom[y]);
                     nL[^1].n[i].WeightsFrom[y] += nL[^1].n[i].RecivedValueFrom[y] * nL[^1].n[i].OutD * learningRate;
                     //DeepLearning(nL, nL.Length - 2, y);
                 }
             }
-            //Utility.ShowNeuronMap(nL, nL.Length-1);
-
             Utility.ShowNeuronMap(nL);
             Utility.ClearValues(nL);
-            //Console.WriteLine("Backprop done.");
+            Console.WriteLine("Backprop done.");
         }
 
         public void DeepLearning(NeuronLayer[] nL, int l, int i)
         {
             for (int y = 0; y < nL[l - 1].n.Count; y++)
             {
-                //Console.WriteLine("deep.");
+                Console.WriteLine("deep.");
                 nL[l].n[i].Error[y] = (nL[l].n[i].RecivedValueFrom[y] * nL[l].n[i].Delta[y]);
                 nL[l].n[i].Delta[y] = nL[l].n[i].Error[y] * Functions.SigmoidDerivative(nL[l].n[i].RecivedValueFrom[y]);
                 nL[l].n[i].WeightsFrom[y] += nL[l].n[i].RecivedValueFrom[y] * nL[l].n[i].Delta[y] * learningRate;
@@ -77,7 +71,7 @@ namespace ConsoleApp4
                 for (int y = 0; y < nL[x].n.Count; y++)
                 {
                     //Console.WriteLine("[" + x + "][" + y + "]");
-                    /*if (x > 0) */
+                    if (x < nL.Length)
                     nL[x].n[y].Z();
                     if (x < nL.Length - 1) nL[x].n[y].Work(y);
                 }

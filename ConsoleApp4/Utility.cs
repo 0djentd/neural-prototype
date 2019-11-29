@@ -23,7 +23,6 @@ namespace ConsoleApp4
                             Console.Write("D=(" + Math.Round(neuronLayers[x].n[y].Delta[z], 2) + ") ");
                             Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[x].n[y].WeightsFrom[z], 2) + ") ");
                             Console.Write("oldW[" + z + "]=(" + Math.Round(neuronLayers[x].n[y].OldWeightsFrom[z], 2) + ") \n");
-                            //Console.Write("oW=(" + Math.Round(neuronLayers[x].n[y].Delta[z], 2) + ")\n");
                         }
                     Console.WriteLine();
                 }
@@ -54,22 +53,17 @@ namespace ConsoleApp4
 
         public static void ClearValues(NeuronLayer[] neuronLayers)
         {
-            //Console.WriteLine("Clearing values");
             for (int x = 0; x < neuronLayers.Length; x++)
             {
-                //Console.Write("[" + x + "]");
                 for (int y = 0; y < neuronLayers[x].n.Count; y++)
                 {
-                    //Console.Write(" (" + Math.Round(neuronLayers[x].n[y].Value, 2) + ")");
                     neuronLayers[x].n[y].Value = 0;
                 }
-                //Console.Write(" cleared\n");
             }
         }
 
         public static void CopyValues(NeuronLayer[] neuronLayers)
         {
-            //Console.WriteLine("Copying values of weight to oldWeight");
             for (int x = 0; x < neuronLayers.Length; x++)
             {
                 for (int y = 0; y < neuronLayers[x].n.Count; y++)
