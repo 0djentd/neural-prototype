@@ -37,7 +37,7 @@ namespace ConsoleApp4
         {
             layersNum = 3;
             neuronNum.Add(3);
-            neuronNum.Add(5);
+            neuronNum.Add(3);
             neuronNum.Add(3);
 
             //Initializing array of layers (which is arrays of neurones)
@@ -136,6 +136,7 @@ namespace ConsoleApp4
                 Feed(neuronLayers);
                 //Utility.ShowNeuronMap(neuronLayers);
                 //Utility.ShowNeuronMap(neuronLayers, 2);
+                //Utility.ShowNeuronMap(neuronLayers);
                 Backpropagation(neuronLayers, outputValue, i);
 
                 countIn++;
@@ -177,7 +178,7 @@ namespace ConsoleApp4
             }
             //Utility.ShowNeuronMap(neuronLayers, neuronLayers.Length-1);
 
-            if (k == 0 | k == 1 | k == 2 | k == 3 | k == 3000) Utility.ShowNeuronMap(neuronLayers,2);
+           Utility.ShowNeuronMap(neuronLayers);
             Utility.ClearValues(neuronLayers);
             //Console.WriteLine("Backprop done.");
         }
