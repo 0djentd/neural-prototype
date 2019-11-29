@@ -48,7 +48,7 @@ namespace ConsoleApp4
                     nL[^1].n[i].Error[y] = (nL[^1].n[i].RecivedValueFrom[y] * nL[^1].n[i].OutD);
                     nL[^1].n[i].Delta[y] = nL[^1].n[i].Error[y] * Functions.SigmoidDerivative(nL[^1].n[i].RecivedValueFrom[y]);
                     nL[^1].n[i].WeightsFrom[y] += nL[^1].n[i].RecivedValueFrom[y] * nL[^1].n[i].OutD * learningRate;
-                    DeepLearning(nL, nL.Length - 2, y);
+                    //DeepLearning(nL, nL.Length - 2, y);
                 }
             }
             //Utility.ShowNeuronMap(nL, nL.Length-1);
