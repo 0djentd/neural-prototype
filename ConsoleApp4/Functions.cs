@@ -1,7 +1,8 @@
 ﻿using System;
+
 namespace ConsoleApp4
 {
-    class Functions
+    internal class Functions
     {
         public static double Sigmoid(double x)
         {
@@ -9,6 +10,7 @@ namespace ConsoleApp4
             //Console.WriteLine("Sigmoided " + x + " to " + y);
             return y;
         }
+
         public static double SigmoidDerivative(double sigmoid)
         {
             //Console.WriteLine("Derivative of " + sigmoid + " is " + (sigmoid * (1 - sigmoid)));

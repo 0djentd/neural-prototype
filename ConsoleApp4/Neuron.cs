@@ -1,29 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
     public class NeuronLayer
     {
-        public List<Neuron> neurons = new List<Neuron>();
+        public List<Neuron> n = new List<Neuron>();
     }
 
     public class Neuron
     {
         //for this neuron
         private double value;
+
         private Neuron[] targetNeurons;
         private Neuron[] parents;
         private double bias = 0;
 
         //for neuron's parents
         private double[] weightsFrom = new double[32];
+
         private double[] oldWeightsFrom = new double[32];
         private double[] recivedValue = new double[32];
         private double e;
 
         //for backpropagation
         private double[] error = new double[32];
+
         private double[] delta = new double[32];
 
         public double Value { get => value; set => this.value = value; }
