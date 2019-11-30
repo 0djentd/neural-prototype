@@ -13,7 +13,7 @@ namespace ConsoleApp4
                 for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
                 {
                     Console.Write("Neuron [" + y + "] ");
-                    Console.Write("V=(" + Math.Round(neuronLayers[x].neuron[y].Value, 2) + ") ");
+                    Console.Write("V=(" + Math.Round(neuronLayers[x].neuron[y].Output, 2) + ") ");
                     if (x < neuronLayers.Length - 1)
                     {
                         Console.Write("\n");
@@ -48,8 +48,8 @@ namespace ConsoleApp4
             Console.WriteLine("========================");
             for (int i = 0; i < neuronLayers[^1].neuron.Count; i++)
             {
-                errorSum += neuronLayers[^1].neuron[i].OutE;
-                Console.Write("[" + i + "] V=" + Math.Round(neuronLayers[^1].neuron[i].Value, 2) + " E=" + Math.Round(neuronLayers[^1].neuron[i].OutE, 2) + "\n");
+                errorSum += Math.Abs(neuronLayers[^1].neuron[i].OutE);
+                Console.Write("[" + i + "] V=" + Math.Round(neuronLayers[^1].neuron[i].Output, 2) + " E=" + Math.Round(neuronLayers[^1].neuron[i].OutE, 2) + "\n");
             }
             Console.WriteLine("Sum of errors are " + Math.Round(errorSum, 4));
             Console.WriteLine("========================");
@@ -61,7 +61,7 @@ namespace ConsoleApp4
             {
                 for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
                 {
-                    neuronLayers[x].neuron[y].Value = 0;
+                    neuronLayers[x].neuron[y].Output = 0;
                     neuronLayers[x].neuron[y].OutD = 0;
                     neuronLayers[x].neuron[y].OutE = 0;
                 }

@@ -92,18 +92,18 @@ namespace ConsoleApp4
             double expSum = 0;
             for (int i = 0; i< layer.neuron.Count; i++)
             {
-                expSum += Math.Exp(layer.neuron[i].Value);
+                expSum += Math.Exp(layer.neuron[i].Output);
             }
-            return Math.Exp(layer.neuron[neuronNum].Value) / expSum;
+            return Math.Exp(layer.neuron[neuronNum].Output) / expSum;
         }
         public static double SoftmaxDerivative(int neuronNum, NeuronLayer layer)
         {
             double expSum = 0;
             for (int i = 0; i < layer.neuron.Count; i++)
             {
-                expSum += Math.Exp(layer.neuron[i].Value);
+                expSum += Math.Exp(layer.neuron[i].Output);
             }
-            double neuronExp = Math.Exp(layer.neuron[neuronNum].Value);
+            double neuronExp = Math.Exp(layer.neuron[neuronNum].Output);
             return (neuronExp*(expSum-neuronExp))/Math.Pow(expSum, 2);
         }
     }
