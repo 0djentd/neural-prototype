@@ -74,7 +74,10 @@ namespace ConsoleApp4
             {
                 for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
                 {
-                    neuronLayers[x].neuron[y].OldWeightsFrom = neuronLayers[x].neuron[y].WeightsFrom;
+                    for (int z = 0; z < neuronLayers[x].neuron[y].WeightsFrom.Length; z++)
+                    {
+                        neuronLayers[x].neuron[y].OldWeightsFrom[z] = neuronLayers[x].neuron[y].WeightsFrom[z];
+                    }
                 }
             }
         }
@@ -82,17 +85,7 @@ namespace ConsoleApp4
         public static double GetRandom()
         {
             Random random = new Random();
-            return (random.NextDouble() * 1.8 - 1);
-        }
-
-        public static double[] Get0Dimension(double[,] arrayName, int z)
-        {
-            double[] result = new double[arrayName.GetLength(1)];
-            for (int i = 0; i < arrayName.GetLength(1); i++)
-            {
-                result[i] = arrayName[z, i];
-            }
-            return result;
+            return (random.NextDouble()*2-1);
         }
     }
 }

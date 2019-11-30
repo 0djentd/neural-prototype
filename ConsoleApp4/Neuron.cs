@@ -62,7 +62,7 @@ namespace ConsoleApp4
         //type of act. function
         private int functionType = 0;
         //k for parametric relu  etc
-        private double k = 0.2;
+        private double k = 0.1;
         //for softmax act. function
         private int layerNumber;
         private int neuronNumber;
