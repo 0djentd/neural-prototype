@@ -7,7 +7,6 @@ namespace ConsoleApp4
     {
         public List<Neuron> neuron = new List<Neuron>();
         public int assignedFunctions = 0;
-
         public void SetFunctions(int count, int function)
         {
             int availableFunctions = neuron.Count - this.assignedFunctions;
@@ -57,16 +56,20 @@ namespace ConsoleApp4
     {
         //for this neuron
         private double value;
-
         private Neuron[] targetNeurons;
         private Neuron[] parents;
         private double bias = 0;
+        //type of act. function
         private int functionType = 0;
+        //k for parametric relu  etc
         private double k = 0.2;
+        //for softmax act. function
+        private int layerNumber;
+        private int neuronNumber;
 
         //for neuron's parents
+        private NeuronLayer[] neuralNetwork;
         private double[] weightsFrom = new double[128];
-
         private double[] oldWeightsFrom = new double[128];
         private double[] recivedValue = new double[128];
         private double e;
@@ -89,6 +92,9 @@ namespace ConsoleApp4
         public double[] Delta { get => delta; set => delta = value; }
         public int FunctionType { get => functionType; set => functionType = value; }
         public double K { get => k; set => k = value; }
+        public int LayerNumber { get => layerNumber; set => layerNumber = value; }
+        public int NeuronNumber { get => neuronNumber; set => neuronNumber = value; }
+        public NeuronLayer[] NeuralNetwork { get => neuralNetwork; set => neuralNetwork = value; }
 
         //x is representing working neurone's number in working layer
         public void Work(int x)
@@ -104,6 +110,7 @@ namespace ConsoleApp4
             }
         }
 
+        //activation functions and their derivatives
         public void Act()
         {
             if (this.FunctionType == 1) this.Value = Functions.Sigmoid(this.Value + this.Bias);
@@ -111,6 +118,7 @@ namespace ConsoleApp4
             else if (this.FunctionType == 3) this.Value = Functions.ReLU(this.Value + this.Bias);
             else if (this.FunctionType == 4) this.Value = Functions.LeReLU(this.Value + this.Bias);
             else if (this.FunctionType == 5) this.Value = Functions.EReLU(this.Value + this.Bias, K);
+            else if (this.FunctionType == 6) this.Value = Functions.Softmax(this.NeuronNumber, NeuralNetwork[this.LayerNumber]);
         }
 
         public double Derivative()
@@ -121,6 +129,7 @@ namespace ConsoleApp4
             else if (this.FunctionType == 3) return Functions.ReLUDerivative(this.Value + this.Bias);
             else if (this.FunctionType == 4) return Functions.LeReLUDerivative(this.Value + this.Bias);
             else if (this.FunctionType == 5) return Functions.EReLUDerivative(this.Value + this.Bias, K);
+            else if (this.FunctionType == 6) return Functions.SoftmaxDerivative(this.NeuronNumber, NeuralNetwork[this.LayerNumber]);
             else return 0;
         }
 

@@ -75,7 +75,7 @@ namespace ConsoleApp4
                 }
                 Feedforward(layer);
                 Backpropagation(layer, outputValue, functions, learningRate);
-                if (i % 2 == 0)
+                if (i % 5 == 0)
                 {
                     Console.WriteLine("Feed #" + i + "  exercise #" + countIn);
                     Utility.ShowResults(layer);
@@ -97,12 +97,16 @@ namespace ConsoleApp4
                 for (int y = 0; y < neuronNum[x]; y++)
                 {
                     layer[x].neuron.Add(new Neuron());
+                    layer[x].neuron[y].LayerNumber = x;
+                    layer[x].neuron[y].NeuronNumber = y;
+
                     //applies "parent neurones" to all layers except first
                     if (x > 0)
                     {
                         layer[x].neuron[y].Parents = layer[x - 1].neuron.ToArray();
                         layer[x].neuron[y].Init();
                     }
+
                 }
                 //applies "target neurones" to all layers except last one
                 if (x < layersNum && x != 0)
