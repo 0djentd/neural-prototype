@@ -12,10 +12,10 @@ namespace ConsoleApp4
                 layer[^1].neuron[i].OutE = correctOutput[i] - layer[^1].neuron[i].Output;
                 layer[^1].neuron[i].DeltaE_wrt_Output = layer[^1].neuron[i].OutE / layer[^1].neuron[i].Output;
                 layer[^1].neuron[i].Out_wrt_In = layer[^1].neuron[i].Output / layer[^1].neuron[i].Input;
-                layer[^1].neuron[i].OutD = layer[^1].neuron[i].OutE * layer[^1].neuron[i].Derivative();
+                //layer[^1].neuron[i].OutD = layer[^1].neuron[i].OutE * layer[^1].neuron[i].Derivative();
                 for (int y = 0; y < layer[^2].neuron.Count; y++)
                 {
-                    layer[^1].neuron[i].DeltaOut_wrt_W[y] = layer[^1].neuron[i].Output / layer[^1].neuron[i].WeightsFrom[y];
+                    layer[^1].neuron[i].DeltaOut_wrt_W[y] = layer[^1].neuron[i].Input / layer[^1].neuron[i].WeightsFrom[y];
                     layer[^1].neuron[i].DeltaE_wrt_W[y] = layer[^1].neuron[i].DeltaE_wrt_Output * layer[^1].neuron[i].Out_wrt_In * layer[^1].neuron[i].DeltaE_wrt_W[y];
                     //layer[^1].neuron[i].Error[y] = layer[^1].neuron[i].RecivedValueFrom[y] * layer[^1].neuron[i].OutD; //same as outE but for each neuron of this layer
                     //layer[^1].neuron[i].Delta[y] = layer[^1].neuron[i].Error[y] * functions.Derivative(layer[^1].neuron[i].RecivedValueFrom[y], layer[^2].neuron[y].FunctionType); //same as outD but for each neuron of this layer
