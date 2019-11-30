@@ -82,7 +82,7 @@ namespace ConsoleApp4
         public static double GetRandom()
         {
             Random random = new Random();
-            return (random.NextDouble() * 2 - 1);
+            return (random.NextDouble() * 1.8 - 1);
         }
 
         public static double[] Get0Dimension(double[,] arrayName, int z)

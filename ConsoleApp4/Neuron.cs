@@ -60,21 +60,21 @@ namespace ConsoleApp4
 
         private Neuron[] targetNeurons;
         private Neuron[] parents;
-        private double bias = 1;
+        private double bias = 0;
         private int functionType = 0;
         private double k = 0.2;
 
         //for neuron's parents
-        private double[] weightsFrom = new double[32];
+        private double[] weightsFrom = new double[128];
 
-        private double[] oldWeightsFrom = new double[32];
-        private double[] recivedValue = new double[32];
+        private double[] oldWeightsFrom = new double[128];
+        private double[] recivedValue = new double[128];
         private double e;
 
         //for backpropagation
-        private double[] error = new double[32];
+        private double[] error = new double[128];
 
-        private double[] delta = new double[32];
+        private double[] delta = new double[128];
 
         public double Value { get => value; set => this.value = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }

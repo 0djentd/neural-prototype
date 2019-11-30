@@ -15,16 +15,17 @@ namespace ConsoleApp4
         private static void Main()
         {
             Network network = new Network();
-            int layersNum = 4;
-            int[] neuronNum = { 3, 5, 5, 1 };
-            double learningRate = 1;
+            int layersNum = 5;
+            int[] neuronNum = { 3, 40, 40, 40, 1 };
+            double learningRate = 0.4;
             bool randomInput = false;
 
             NeuronLayer[] neuronNetwork = network.Init(layersNum, neuronNum);
             neuronNetwork[0].SetFunctionsAll(4);
-            neuronNetwork[1].SetFunctionsAll(2);
-            neuronNetwork[2].SetFunctionsAll(4);
-            neuronNetwork[3].SetFunctionsAll(3);
+            neuronNetwork[1].SetFunctionsAll(3);
+            neuronNetwork[2].SetFunctionsAll(2);
+            neuronNetwork[4].SetFunctionsAll(3);
+            neuronNetwork[0].SetFunctionsAll(4);
 
             double[,] InputValuesTraining = new double[4, 3] {
             { 0.5, 1, 1},
@@ -44,7 +45,7 @@ namespace ConsoleApp4
             int count = Convert.ToInt32(Console.ReadLine());
             network.Learn(neuronNetwork, InputValuesTraining, OutputValuesTraining, count, learningRate, randomInput);
 
-            Utility.ShowNeuronMap(neuronNetwork);
+            //Utility.ShowNeuronMap(neuronNetwork);
             Utility.ShowResults(neuronNetwork);
         }
     }

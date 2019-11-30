@@ -16,6 +16,7 @@ namespace ConsoleApp4
                     layer[^1].neuron[i].Error[y] = layer[^1].neuron[i].RecivedValueFrom[y] * layer[^1].neuron[i].OutD; //same as outE but for each neuron of this layer
                     layer[^1].neuron[i].Delta[y] = layer[^1].neuron[i].Error[y] * functions.Derivative(layer[^1].neuron[i].RecivedValueFrom[y], layer[^2].neuron[y].FunctionType); //same as outD but for each neuron of this layer
                     layer[^1].neuron[i].WeightsFrom[y] += layer[^1].neuron[i].RecivedValueFrom[y] * layer[^1].neuron[i].OutD * learningRate;
+                    //if (Math.Pow( layer[^1].neuron[i].Error[y], 2) > 0.001)
                     DeepLearning(layer, layer.Length - 2, y, functions, learningRate);
                 }
             }
@@ -74,14 +75,14 @@ namespace ConsoleApp4
                 }
                 Feedforward(layer);
                 Backpropagation(layer, outputValue, functions, learningRate);
-                if (i % 10 == 0)
+                if (i % 2 == 0)
                 {
                     Console.WriteLine("Feed #" + i + "  exercise #" + countIn);
                     Utility.ShowResults(layer);
                 }
                 Utility.ClearValues(layer);
                 countIn++;
-                if (countIn > inputData.GetLength(1) - 1) countIn = 0;
+                if (countIn == inputData.GetLength(1)) countIn = 0;
             }
         }
 

@@ -54,7 +54,7 @@ namespace ConsoleApp4
 
         public static double ReLU(double x)
         {
-            if (x < 0) x = 0;
+            if (x < 0) return 0;
             return x;
         }
 
@@ -66,7 +66,7 @@ namespace ConsoleApp4
 
         public static double LeReLU(double x)
         {
-            if (x < 0) x = 0.02;
+            if (x < 0) return x * 0.02;
             return x;
         }
 
