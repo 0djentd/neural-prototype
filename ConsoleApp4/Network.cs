@@ -8,54 +8,85 @@ namespace ConsoleApp4
         {
             CopyValues(layer);
             Gradient(layer, correctOutput);
-            Correction(layer, learningRate);
+            //ShowGradient(layer);
+            Utility.ShowNeuronMap(layer, true);
+            Console.WriteLine("total amoun of correction is "+Correction(layer, learningRate));
+            if (Utility.ErrorSum(layer) > 5)
+            {
+                Console.WriteLine("Need to reinitialize neurons.");
+                //Randomize(layer);
+            }
             ClearGradient(layer);
         }
         public void Gradient(NeuronLayer[] layer, double[] correctOutput)
         {
             for (int l = layer.Length-1; l>0;)
             {
-                Console.WriteLine(l + " layer backpropagation");
                 for (int j = 0; j < layer[l].neuron.Count; j++)
                 {
                     if (l == layer.Length - 1)
                     {
                         layer[l].neuron[j].Error = correctOutput[j] - layer[l].neuron[j].Output;
-                        Console.WriteLine("Error " + layer[l].neuron[j].Error);
-                        layer[l].neuron[j].DeltaE_wrt_Output = layer[l].neuron[j].Output - correctOutput[j];
-                        Console.WriteLine("DeltaE wrt Output " + layer[l].neuron[j].DeltaE_wrt_Output);
+                        layer[l].neuron[j].DeltaE_wrt_Output = correctOutput[j]- layer[l].neuron[j].Output;
                     }
+
                     layer[l].neuron[j].DeltaE_wrt_In = layer[l].neuron[j].Derivative() * layer[l].neuron[j].DeltaE_wrt_Output;
-                    Console.WriteLine("DeltaE wrt In " + layer[l].neuron[j].DeltaE_wrt_In);
+
                     for (int i = 0; i < layer[l - 1].neuron.Count; i++)
                     {
-                        layer[l].neuron[j].DeltaE_wrt_W[i] = layer[l].neuron[j].DeltaE_wrt_In * layer[l].neuron[j].RecivedInputFrom[i];
-                        Console.WriteLine("DeltaE wrt W " + layer[l].neuron[j].DeltaE_wrt_W[i]);
+                        //layer[l].neuron[j].DeltaE_wrt_W[i] = layer[l].neuron[j].DeltaE_wrt_In * layer[l].neuron[j].RecivedInputFrom[i];
+                        layer[l].neuron[j].DeltaE_wrt_W[i] = layer[l].neuron[j].RecivedInputFrom[i] * layer[l].neuron[j].DeltaE_wrt_In;
                     }
                 }
                 for (int i = 0; i < layer[l - 1].neuron.Count; i++)
                 {
                     for (int j = 0; j < layer[l].neuron.Count; j++)
                     {
-                        layer[l - 1].neuron[i].DeltaE_wrt_Output += layer[l].neuron[j].W_From[i] * layer[l].neuron[j].RecivedInputFrom[i];
+                        layer[l - 1].neuron[i].DeltaE_wrt_Output += layer[l].neuron[j].W_From[i] * layer[l].neuron[j].DeltaE_wrt_In;
+                    }
+                }
+                --l;
+            }
+        }
+        public void ShowGradient(NeuronLayer[] layer)
+        {
+            for (int l = layer.Length - 1; l > 0;)
+            {
+                Console.WriteLine(l + " layer backpropagation");
+                for (int j = 0; j < layer[l].neuron.Count; j++)
+                {
+                    if (l == layer.Length - 1)
+                    {
+                        Console.WriteLine("[" + j + "] Error " + layer[l].neuron[j].Error);
+                    }
+                    Console.WriteLine("[" + j + "] DeltaE wrt Output " + layer[l].neuron[j].DeltaE_wrt_Output);
+                    Console.WriteLine("[" + j + "] DeltaE wrt In " + layer[l].neuron[j].DeltaE_wrt_In);
+                    for (int i = 0; i < layer[l - 1].neuron.Count; i++)
+                    {
+                        Console.WriteLine("[" + j + "]<-[" + i + "] Recived input " + layer[l].neuron[j].RecivedInputFrom[i]);
+                        Console.WriteLine("[" + j + "]->[" + i + "] DeltaE wrt W " + layer[l].neuron[j].DeltaE_wrt_W[i]);
                     }
                 }
                 --l;
             }
         }
 
-        public void Correction(NeuronLayer[] layers, double learningRate)
+        public double Correction(NeuronLayer[] layers, double learningRate)
         {
-            for (int j = layers.Length-1; j>0; j--)
+            double amount = 0;
+            for (int j = layers.Length-1; j>0;)
             {
                 for (int i = 0; i < layers[j].neuron.Count; i++)
                 {
                     for (int z = 0; z < layers[j-1].neuron.Count; z++)
                     {
-                        layers[j].neuron[i].W_From[z] -= (layers[j].neuron[i].DeltaE_wrt_W[z]*learningRate);
+                        layers[j].neuron[i].W_From[z] += (layers[j].neuron[i].DeltaE_wrt_W[z]*learningRate);
+                        amount = layers[j].neuron[i].W_From[z] - layers[j].neuron[i].Old_W_From[z];
                     }
                 }
+                --j;
             }
+            return amount;
         }
 
         public void ClearGradient(NeuronLayer[] layers)
@@ -64,12 +95,15 @@ namespace ConsoleApp4
             {
                 for (int i = 0; i < layers[j].neuron.Count; i++)
                 {
+                    layers[j].neuron[i].Output = 0;
+                    layers[j].neuron[i].Input = 0;
                     layers[j].neuron[i].DeltaE_wrt_Output = 0;
                     layers[j].neuron[i].DeltaE_wrt_In = 0;
                     for (int z = 0; z < layers[j - 1].neuron.Count; z++)
                     {
+                        layers[j].neuron[i].Old_W_From[z] = 0;
                         layers[j].neuron[i].DeltaE_wrt_W[z] = 0;
-                        //layers[j].neuron[i].RecivedInputFrom[z] = 0;
+                        layers[j].neuron[i].RecivedInputFrom[z] = 0;
                     }
                 }
             }
@@ -108,7 +142,6 @@ namespace ConsoleApp4
                     if (x > 0)
                     {
                         layer[x].neuron[y].Parents = layer[x - 1].neuron.ToArray();
-                        layer[x].neuron[y].Init();
                     }
                     if (x == layer.Length - 1)
                     {
@@ -127,17 +160,33 @@ namespace ConsoleApp4
                     }
                 }
             }
+            Randomize(layer);
             return layer;
         }
 
-        public void Learn(NeuronLayer[] layer, double[,] inputData, double[,] outputData, int count, double learningRate)
+        public void Randomize(NeuronLayer[] layer)
+        {
+            for (int l =1; l<layer.Length; l++)
+            {
+                for (int i = 0; i < layer[l].neuron.Count; i++)
+                {
+                    layer[l].neuron[i].Init();
+                }
+            }
+        }
+
+        public void Learn(NeuronLayer[] layer, double[,] inputData, double[,] outputData, int epoch, int batch, double learningRate)
         {
             int countIn = 0;
             double[] outputValue = new double[layer[^1].neuron.Count];
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < epoch*inputData.GetLength(0); i++)
             {
                 //countIn = 0;
                 // input values
+                if (i % 1 == 0)
+                {
+                    Console.WriteLine("\n\nFeed #" + i + "  exercise #" + countIn);
+                }
                 for (int h = 0; h < layer[0].neuron.Count; h++)
                 {
                     layer[0].neuron[h].Output = inputData[countIn, h];
@@ -149,13 +198,7 @@ namespace ConsoleApp4
                 }
                 Feedforward(layer);
                 Backpropagation(layer, outputValue, learningRate);
-                if (Utility.ErrorSum(layer)>10/*| Utility.ErrorSum(layer)<0.05*/) i = count; 
-                if (i % 1 == 0)
-                {
-                    Console.WriteLine("\n\nFeed #" + i + "  exercise #" + countIn);
-                    Utility.ShowResults(layer);
-                }
-                //Utility.ShowNeuronMap(layer, false);
+                //if (Utility.ErrorSum(layer)>10/*| Utility.ErrorSum(layer)<0.05*/) i = count; 
                 ClearValues(layer);
                 if (countIn == inputData.GetLength(0)-1) countIn = 0;
                 else countIn++;
