@@ -64,6 +64,7 @@ namespace ConsoleApp4
             this.neuron.Add(new Neuron());
             this.BiasNeurons += 1;
             this.neuron[neuron.Count-1].Bias = true;
+            this.neuron[neuron.Count - 1].Output = 1;
         }
     }
 
@@ -136,7 +137,7 @@ namespace ConsoleApp4
         public void Act()
         {
             this.Input = this.Output;
-            if (this.FunctionType == 0 | this.Bias==true) this.Output = this.Output;
+            if (this.FunctionType == 0 || this.Bias==true) this.Output = this.Output;
             else if (this.FunctionType == 1) this.Output = Functions.Sigmoid(this.Output);
             else if (this.FunctionType == 2) this.Output = Functions.TanH(this.Output);
             else if (this.FunctionType == 3) this.Output = Functions.ReLU(this.Output);
@@ -147,7 +148,7 @@ namespace ConsoleApp4
 
         public double Derivative()
         {
-            if (this.FunctionType == 0 | this.Bias==true) return 1;
+            if (this.FunctionType == 0 || this.Bias==true) return 1;
             else if (this.FunctionType == 1) return Functions.SigmoidDerivative(this.Output);
             else if (this.FunctionType == 2) return Functions.TanHDerivative(this.Output);
             else if (this.FunctionType == 3) return Functions.ReLUDerivative(this.Output);
@@ -159,12 +160,15 @@ namespace ConsoleApp4
 
         public void Init()
         {
-            for (int i = 0; i < Parents.Length; i++)
+            if (this.Bias == false)
             {
-                Random random = new Random();
-                double number = (random.NextDouble() * 2.0 - 1.0) * Math.Sqrt(2.0 / this.Parents.Length);
-                Console.WriteLine("Generated " + number + " (" + Parents.Length + ")");
-                this.W_From[i] = number;
+                for (int i = 0; i < this.Parents.Length; i++)
+                {
+                    Random random = new Random();
+                    double number = (random.NextDouble() * 2.0 - 1.0) * Math.Sqrt(2.0 / this.Parents.Length);
+                    Console.WriteLine("Generated " + number + " (" + Parents.Length + ")");
+                    this.W_From[i] = number;
+                }
             }
         }
     }

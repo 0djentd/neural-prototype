@@ -19,25 +19,25 @@ namespace ConsoleApp4
             int layersNum = 3;
             int[] neuronNum = { 3, 5, 2 };
             int batch = 0;
-            double learningRate = 0.5;
+            double learningRate = 0.1;
 
             NeuronLayer[] neuronNetwork = network.Init(layersNum, neuronNum, true);
             neuronNetwork[0].SetFunctionsAll(0);
-            neuronNetwork[1].SetFunctionsAll(1);
-            neuronNetwork[2].SetFunctionsAll(1);
+            neuronNetwork[1].SetFunctionsAll(2);
+            neuronNetwork[2].SetFunctionsAll(2);
             
             double[,] InputValuesTraining = new double[4, 3] {
-            { 0, 1, 1},
+            { -1, 1, 1},
             { 1, 0, 1},
             { 1, 1, 1},
-            { 0, 1, 0}
+            { 0, 1, 1}
             };
 
             double[,] OutputValuesTraining = new double[4, 2] {
-            { 0.1, 0.7},
-            { 0.7, 0.1},
-            { 0.7, 0.1},
-            { 0.1, 0.7}
+            { -1, -1},
+            { 1, 0},
+            { 1, 0},
+            { 0, 0}
             };
             /*
             double[,] InputValuesTraining = new double[2, 1] {

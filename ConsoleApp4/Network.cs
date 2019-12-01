@@ -22,7 +22,6 @@ namespace ConsoleApp4
         {
             for (int l = layer.Length-1; l>0;)
             {
-                Console.WriteLine(l + " layer backpropagation");
                 for (int j = 0; j < layer[l].neuron.Count- layer[l].BiasNeurons; j++)
                 {
                     if (l == layer.Length - 1)
@@ -49,6 +48,26 @@ namespace ConsoleApp4
                 --l;
             }
         }
+
+        public double Correction(NeuronLayer[] layers, double learningRate)
+        {
+            double amount = 0;
+            for (int j = layers.Length - 1; j > 0;)
+            {
+                for (int i = 0; i < layers[j].neuron.Count - layers[j].BiasNeurons; i++)
+                {
+                    for (int z = 0; z < layers[j - 1].neuron.Count; z++)
+                    {
+                        layers[j].neuron[i].W_From[z] += (layers[j].neuron[i].DeltaE_wrt_W[z] * learningRate);
+                        amount = layers[j].neuron[i].W_From[z] - layers[j].neuron[i].Old_W_From[z];
+                    }
+                }
+                --j;
+            }
+            return amount;
+        }
+
+
         public void ShowGradient(NeuronLayer[] layer)
         {
             for (int l = layer.Length - 1; l > 0;)
@@ -72,23 +91,6 @@ namespace ConsoleApp4
             }
         }
 
-        public double Correction(NeuronLayer[] layers, double learningRate)
-        {
-            double amount = 0;
-            for (int j = layers.Length-1; j>0;)
-            {
-                for (int i = 0; i < layers[j].neuron.Count- layers[j].BiasNeurons; i++)
-                {
-                    for (int z = 0; z < layers[j-1].neuron.Count; z++)
-                    {
-                        layers[j].neuron[i].W_From[z] += (layers[j].neuron[i].DeltaE_wrt_W[z]*learningRate);
-                        amount = layers[j].neuron[i].W_From[z] - layers[j].neuron[i].Old_W_From[z];
-                    }
-                }
-                --j;
-            }
-            return amount;
-        }
 
         public void ClearGradient(NeuronLayer[] layers)
         {
@@ -116,7 +118,7 @@ namespace ConsoleApp4
             {
                 for (int y = 0; y < layer[x].neuron.Count; y++)
                 {
-                    Console.WriteLine("Working " + x + " " + y);
+                    //Console.WriteLine("Working " + x + " " + y);
                     /*if (x > 0)*/ layer[x].neuron[y].Act();
                     if (x < layer.Length - 1) layer[x].neuron[y].Work(y);
                 }
@@ -190,7 +192,7 @@ namespace ConsoleApp4
             double[] outputValue = new double[layer[^1].neuron.Count - layer[^1].BiasNeurons];
             for (int i = 0; i < epoch*inputData.GetLength(0); i++)
             {
-                //countIn = 0;
+                countIn = 1;
                 // input values
                 if (i % 1 == 0)
                 {
