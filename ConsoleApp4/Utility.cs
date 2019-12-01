@@ -14,6 +14,10 @@ namespace ConsoleApp4
                 for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
                 {
                     Console.Write("Neuron [" + y + "] ");
+                    if (neuronLayers[x].neuron[y].Bias == true)
+                    {
+                        Console.Write("(bias neuron) ");
+                    }
                     Console.Write("O=(" + Math.Round(neuronLayers[x].neuron[y].Output, 2) + ") ");
                     Console.Write("I=(" + Math.Round(neuronLayers[x].neuron[y].Input, 2) + ") ");
                     if (x < neuronLayers.Length - 1)
@@ -24,7 +28,7 @@ namespace ConsoleApp4
                     {
                         Console.Write("Error=(" + Math.Round(neuronLayers[x].neuron[y].Error, 2) + ") \n");
                     }
-                    if (x > 0)
+                    if (x > 0 && neuronLayers[x].neuron[y].Bias==false)
                     {
                         for (int z = 0; z < neuronLayers[x - 1].neuron.Count; z++)
                         {
@@ -49,6 +53,17 @@ namespace ConsoleApp4
                 error += Math.Abs(layer[^1].neuron[i].Error);
             }
             return error;
+        }
+
+        public static Neuron[] ArrayShortener(Neuron[] neurons, int biases)
+        {
+            Neuron[] a = new Neuron[neurons.Length - biases];
+            for (int i = 0; i< a.Length; i++)
+            {
+                a[i] = neurons[i];
+                Console.WriteLine(a[i].Bias);
+            }
+            return a;
         }
 
         public static void ShowResults(NeuronLayer[] neuronLayers)

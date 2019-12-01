@@ -4,6 +4,7 @@ namespace ConsoleApp4
 {
     internal class Functions
     {
+        /*
         public double Derivative(double x, int functionType)
         {
             if (functionType == 0) return 1;
@@ -28,7 +29,7 @@ namespace ConsoleApp4
             else if (functionType == 4) return Functions.LeReLUDerivative(x);
             else if (functionType == 5) return Functions.EReLUDerivative(x, k);
             else return 0;
-        }
+        }*/
 
         public static double Sigmoid(double x)
         {
