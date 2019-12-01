@@ -4,88 +4,70 @@ namespace ConsoleApp4
 {
     internal class Utility
     {
-        public static void ShowNeuronMap(NeuronLayer[] neuronLayers)
+        public static void ShowNeuronMap(NeuronLayer[] neuronLayers, bool output)
         {
             Console.WriteLine("\n========= Neuron map ========\n");
             for (int x = 0; x < neuronLayers.Length; x++)
             {
+                if (output == true) x = neuronLayers.Length - 1;
                 Console.Write("----- Layer [" + x + "] -----\n\n");
                 for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
                 {
                     Console.Write("Neuron [" + y + "] ");
-                    Console.Write("V=(" + Math.Round(neuronLayers[x].neuron[y].Output, 2) + ") ");
+                    Console.Write("O=(" + Math.Round(neuronLayers[x].neuron[y].Output, 2) + ") ");
+                    Console.Write("I=(" + Math.Round(neuronLayers[x].neuron[y].Input, 2) + ") ");
                     if (x < neuronLayers.Length - 1)
                     {
                         Console.Write("\n");
                     }
                     else
                     {
-                        Console.Write("oE=(" + Math.Round(neuronLayers[x].neuron[y].OutE, 2) + ") ");
-                        Console.Write("oD=(" + Math.Round(neuronLayers[x].neuron[y].OutD, 2) + ")\n");
+                        Console.Write("Error=(" + Math.Round(neuronLayers[x].neuron[y].Error, 2) + ") \n");
                     }
                     if (x > 0)
                     {
                         for (int z = 0; z < neuronLayers[x - 1].neuron.Count; z++)
                         {
-                            Console.Write("E=(" + Math.Round(neuronLayers[x].neuron[y].Error[z], 4) + ") ");
-                            Console.Write("D=(" + Math.Round(neuronLayers[x].neuron[y].Delta[z], 4) + ") ");
-                            Console.Write("R[" + z + "]=(" + Math.Round(neuronLayers[x].neuron[y].RecivedValueFrom[z], 2) + ") ");
-                            Console.Write("DeltaW [" + z + "]=(" + (neuronLayers[x].neuron[y].WeightsFrom[z] - neuronLayers[x].neuron[y].OldWeightsFrom[z]) + ") ");
-                            Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[x].neuron[y].WeightsFrom[z], 2) + ") ");
+                            Console.Write("R[" + z + "]=(" + Math.Round(neuronLayers[x].neuron[y].RecivedInputFrom[z], 2) + ") ");
+                            Console.Write("DeltaW [" + z + "]=(" + (neuronLayers[x].neuron[y].W_From[z] - neuronLayers[x].neuron[y].Old_W_From[z]) + ") ");
+                            Console.Write("W[" + z + "]=(" + Math.Round(neuronLayers[x].neuron[y].W_From[z], 2) + ") ");
                             Console.Write("\n");
                         }
                     }
                     Console.WriteLine();
                 }
-                Console.Write("\n");
+                Console.WriteLine();
             }
             Console.WriteLine();
         }
 
+        public static double ErrorSum(NeuronLayer[] layer)
+        {
+            double error = 0;
+            for (int i = 0; i<layer[^1].neuron.Count; i++)
+            {
+                error += Math.Abs(layer[^1].neuron[i].Error);
+            }
+            return error;
+        }
+
         public static void ShowResults(NeuronLayer[] neuronLayers)
         {
-            double errorSum = 0;
             Console.WriteLine("========================");
             for (int i = 0; i < neuronLayers[^1].neuron.Count; i++)
             {
-                errorSum += Math.Abs(neuronLayers[^1].neuron[i].OutE);
-                Console.Write("[" + i + "] V=" + Math.Round(neuronLayers[^1].neuron[i].Output, 2) + " E=" + Math.Round(neuronLayers[^1].neuron[i].OutE, 2) + "\n");
+                Console.Write("[" + i + "] V=" + Math.Round(neuronLayers[^1].neuron[i].Output, 2) + " E=" + Math.Round(neuronLayers[^1].neuron[i].Error, 2) + "\n");
             }
-            Console.WriteLine("Sum of errors are " + Math.Round(errorSum, 4));
+            Console.WriteLine("Sum of errors are " + Math.Round(ErrorSum(neuronLayers), 4));
             Console.WriteLine("========================");
         }
 
-        public static void ClearValues(NeuronLayer[] neuronLayers)
-        {
-            for (int x = 0; x < neuronLayers.Length; x++)
-            {
-                for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
-                {
-                    neuronLayers[x].neuron[y].Output = 0;
-                    neuronLayers[x].neuron[y].OutD = 0;
-                    neuronLayers[x].neuron[y].OutE = 0;
-                }
-            }
-        }
-
-        public static void CopyValues(NeuronLayer[] neuronLayers)
-        {
-            for (int x = 0; x < neuronLayers.Length; x++)
-            {
-                for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
-                {
-                    for (int z = 0; z < neuronLayers[x].neuron[y].WeightsFrom.Length; z++)
-                    {
-                        neuronLayers[x].neuron[y].OldWeightsFrom[z] = neuronLayers[x].neuron[y].WeightsFrom[z];
-                    }
-                }
-            }
-        }
-
-        public static double GetRandom()
+        public static double GetRandom(double neurones)
         {
             Random random = new Random();
-            return (random.NextDouble()*2-1);
+            double number = (random.NextDouble() * 2.0 - 1.0) * Math.Sqrt(2.0 / neurones);
+            Console.WriteLine("Generated " + number + " (" + neurones + ")");
+            return number;
         }
     }
 }

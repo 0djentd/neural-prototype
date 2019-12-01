@@ -42,14 +42,12 @@ namespace ConsoleApp4
 
         public static double TanH(double x)
         {
-            double y = 2 / (1 + Math.Exp(-2 * x)) - 1;
-            return y;
+            return (2 / (1 + Math.Exp(-2 * x))) - 1;
         }
 
         public static double TanHDerivative(double tanh)
         {
-            double y = 1 - Math.Pow(tanh, 2);
-            return y;
+            return (1 - Math.Pow(tanh, 2));
         }
 
         public static double ReLU(double x)
@@ -61,24 +59,24 @@ namespace ConsoleApp4
         public static double ReLUDerivative(double x)
         {
             if (x < 0) return 0;
-            else return 1;
+            return 1;
         }
 
         public static double LeReLU(double x)
         {
-            if (x < 0) return x * 0.02;
+            if (x < 0) return x*0.1;
             return x;
         }
 
         public static double LeReLUDerivative(double x)
         {
-            if (x < 0) return 0.02;
-            else return 1;
+            if (x < 0) return 0.1;
+            return 1;
         }
 
         public static double EReLU(double x, double k)
         {
-            if (x < 0) x = k * (Math.Exp(x) - 1);
+            if (x < 0) return k * (Math.Exp(x) - 1);
             return x;
         }
 

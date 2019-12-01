@@ -4,36 +4,74 @@ namespace ConsoleApp4
 {
     internal class Network
     {
-        public void Backpropagation(NeuronLayer[] layer, double[] correctOutput, Functions functions, double learningRate)
+        public void Backpropagation(NeuronLayer[] layer, double[] correctOutput, double learningRate)
         {
-            Utility.CopyValues(layer);
-            for (int i = 0; i < layer[^1].neuron.Count; i++)
+            CopyValues(layer);
+            Gradient(layer, correctOutput);
+            Correction(layer, learningRate);
+            ClearGradient(layer);
+        }
+        public void Gradient(NeuronLayer[] layer, double[] correctOutput)
+        {
+            for (int l = layer.Length-1; l>0;)
             {
-                layer[^1].neuron[i].OutE = correctOutput[i] - layer[^1].neuron[i].Output;
-                layer[^1].neuron[i].DeltaE_wrt_Output = layer[^1].neuron[i].OutE / layer[^1].neuron[i].Output;
-                layer[^1].neuron[i].Out_wrt_In = layer[^1].neuron[i].Output / layer[^1].neuron[i].Input;
-                //layer[^1].neuron[i].OutD = layer[^1].neuron[i].OutE * layer[^1].neuron[i].Derivative();
-                for (int y = 0; y < layer[^2].neuron.Count; y++)
+                Console.WriteLine(l + " layer backpropagation");
+                for (int j = 0; j < layer[l].neuron.Count; j++)
                 {
-                    layer[^1].neuron[i].DeltaOut_wrt_W[y] = layer[^1].neuron[i].Input / layer[^1].neuron[i].WeightsFrom[y];
-                    layer[^1].neuron[i].DeltaE_wrt_W[y] = layer[^1].neuron[i].DeltaE_wrt_Output * layer[^1].neuron[i].Out_wrt_In * layer[^1].neuron[i].DeltaE_wrt_W[y];
-                    //layer[^1].neuron[i].Error[y] = layer[^1].neuron[i].RecivedValueFrom[y] * layer[^1].neuron[i].OutD; //same as outE but for each neuron of this layer
-                    //layer[^1].neuron[i].Delta[y] = layer[^1].neuron[i].Error[y] * functions.Derivative(layer[^1].neuron[i].RecivedValueFrom[y], layer[^2].neuron[y].FunctionType); //same as outD but for each neuron of this layer
-                    layer[^1].neuron[i].WeightsFrom[y] -= layer[^1].neuron[i].DeltaE_wrt_W[y];
-                    //if (Math.Pow( layer[^1].neuron[i].Error[y], 2) > 0.001)
-                    //DeepLearning(layer, layer.Length - 2, y, functions, learningRate);
+                    if (l == layer.Length - 1)
+                    {
+                        layer[l].neuron[j].Error = correctOutput[j] - layer[l].neuron[j].Output;
+                        Console.WriteLine("Error " + layer[l].neuron[j].Error);
+                        layer[l].neuron[j].DeltaE_wrt_Output = layer[l].neuron[j].Output - correctOutput[j];
+                        Console.WriteLine("DeltaE wrt Output " + layer[l].neuron[j].DeltaE_wrt_Output);
+                    }
+                    layer[l].neuron[j].DeltaE_wrt_In = layer[l].neuron[j].Derivative() * layer[l].neuron[j].DeltaE_wrt_Output;
+                    Console.WriteLine("DeltaE wrt In " + layer[l].neuron[j].DeltaE_wrt_In);
+                    for (int i = 0; i < layer[l - 1].neuron.Count; i++)
+                    {
+                        layer[l].neuron[j].DeltaE_wrt_W[i] = layer[l].neuron[j].DeltaE_wrt_In * layer[l].neuron[j].RecivedInputFrom[i];
+                        Console.WriteLine("DeltaE wrt W " + layer[l].neuron[j].DeltaE_wrt_W[i]);
+                    }
+                }
+                for (int i = 0; i < layer[l - 1].neuron.Count; i++)
+                {
+                    for (int j = 0; j < layer[l].neuron.Count; j++)
+                    {
+                        layer[l - 1].neuron[i].DeltaE_wrt_Output += layer[l].neuron[j].W_From[i] * layer[l].neuron[j].RecivedInputFrom[i];
+                    }
+                }
+                --l;
+            }
+        }
+
+        public void Correction(NeuronLayer[] layers, double learningRate)
+        {
+            for (int j = layers.Length-1; j>0; j--)
+            {
+                for (int i = 0; i < layers[j].neuron.Count; i++)
+                {
+                    for (int z = 0; z < layers[j-1].neuron.Count; z++)
+                    {
+                        layers[j].neuron[i].W_From[z] -= (layers[j].neuron[i].DeltaE_wrt_W[z]*learningRate);
+                    }
                 }
             }
         }
 
-        public void DeepLearning(NeuronLayer[] layer, int l, int i, Functions functions, double learningRate)
+        public void ClearGradient(NeuronLayer[] layers)
         {
-            for (int y = 0; y < layer[l - 1].neuron.Count; y++)
+            for (int j = layers.Length - 1; j > 0; j--)
             {
-                layer[l].neuron[i].Error[y] = layer[l].neuron[i].RecivedValueFrom[y] * layer[l].neuron[i].Delta[y];
-                layer[l].neuron[i].Delta[y] = layer[l].neuron[i].Error[y] * functions.Derivative(layer[l].neuron[i].RecivedValueFrom[y], layer[l - 1].neuron[y].FunctionType);
-                layer[l].neuron[i].WeightsFrom[y] += layer[l].neuron[i].RecivedValueFrom[y] * layer[l].neuron[i].Delta[y] * learningRate;
-                if (l - 1 > 0) DeepLearning(layer, l - 1, y, functions, learningRate);
+                for (int i = 0; i < layers[j].neuron.Count; i++)
+                {
+                    layers[j].neuron[i].DeltaE_wrt_Output = 0;
+                    layers[j].neuron[i].DeltaE_wrt_In = 0;
+                    for (int z = 0; z < layers[j - 1].neuron.Count; z++)
+                    {
+                        layers[j].neuron[i].DeltaE_wrt_W[z] = 0;
+                        //layers[j].neuron[i].RecivedInputFrom[z] = 0;
+                    }
+                }
             }
         }
 
@@ -43,7 +81,7 @@ namespace ConsoleApp4
             {
                 for (int y = 0; y < layer[x].neuron.Count; y++)
                 {
-                    if (x > 0) layer[x].neuron[y].Act();
+                    /*if (x > 0)*/ layer[x].neuron[y].Act();
                     if (x < layer.Length - 1) layer[x].neuron[y].Work(y);
                 }
             }
@@ -56,24 +94,31 @@ namespace ConsoleApp4
             NeuronLayer[] layer = new NeuronLayer[layersNum];
             for (int x = 0; x < layer.Length; x++)
             {
+                //init layer, which is array of neurones
                 layer[x] = new NeuronLayer();
                 for (int y = 0; y < neuronNum[x]; y++)
                 {
+                    //init neuron
                     layer[x].neuron.Add(new Neuron());
                     layer[x].neuron[y].LayerNumber = x;
                     layer[x].neuron[y].NeuronNumber = y;
                     layer[x].neuron[y].NeuralNetwork = layer;
 
-                    //applies "parent neurones" to all layers except first
+                    //applies "parent neurones" to all layers except first and randomize synapses
                     if (x > 0)
                     {
-
                         layer[x].neuron[y].Parents = layer[x - 1].neuron.ToArray();
                         layer[x].neuron[y].Init();
                     }
+                    if (x == layer.Length - 1)
+                    {
+                        layer[x].neuron[y].Bias = 0;
+                    }
 
                 }
+
                 //applies "target neurones" to all layers except last one
+                //note that this process is happening for previous layer to "x" layer
                 if (x < layersNum && x != 0)
                 {
                     for (int y = 0; y < neuronNum[x - 1]; y++)
@@ -85,44 +130,60 @@ namespace ConsoleApp4
             return layer;
         }
 
-        public void Learn(NeuronLayer[] layer, double[,] inputData, double[,] outputData, int count, double learningRate, bool randomInput)
+        public void Learn(NeuronLayer[] layer, double[,] inputData, double[,] outputData, int count, double learningRate)
         {
-            Functions functions = new Functions();
             int countIn = 0;
             double[] outputValue = new double[layer[^1].neuron.Count];
             for (int i = 0; i < count; i++)
             {
-                //countIn = 1;
+                //countIn = 0;
                 // input values
-                if (randomInput == true)
+                for (int h = 0; h < layer[0].neuron.Count; h++)
                 {
-                    for (int h = 0; h < layer[0].neuron.Count; h++)
-                    {
-                        layer[0].neuron[h].Output = Utility.GetRandom();
-                    }
+                    layer[0].neuron[h].Output = inputData[countIn, h];
                 }
-                else
+                for (int h = 0; h < layer[^1].neuron.Count; h++)
                 {
-                    for (int h = 0; h < layer[0].neuron.Count; h++)
-                    {
-                        layer[0].neuron[h].Output = inputData[countIn, h];
-                    }
-                    for (int h = 0; h < layer[^1].neuron.Count; h++)
-                    {
-                        // out Values
-                        outputValue[h] = outputData[countIn, h];
-                    }
+                    // out Values
+                    outputValue[h] = outputData[countIn, h];
                 }
                 Feedforward(layer);
-                Backpropagation(layer, outputValue, functions, learningRate);
+                Backpropagation(layer, outputValue, learningRate);
+                if (Utility.ErrorSum(layer)>10/*| Utility.ErrorSum(layer)<0.05*/) i = count; 
                 if (i % 1 == 0)
                 {
                     Console.WriteLine("\n\nFeed #" + i + "  exercise #" + countIn);
                     Utility.ShowResults(layer);
                 }
-                Utility.ClearValues(layer);
-                countIn++;
-                if (countIn == inputData.GetLength(1)) countIn = 0;
+                //Utility.ShowNeuronMap(layer, false);
+                ClearValues(layer);
+                if (countIn == inputData.GetLength(0)-1) countIn = 0;
+                else countIn++;
+            }
+        }
+        public static void ClearValues(NeuronLayer[] neuronLayers)
+        {
+            for (int x = 0; x < neuronLayers.Length; x++)
+            {
+                for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
+                {
+                    neuronLayers[x].neuron[y].Output = 0;
+                    neuronLayers[x].neuron[y].Input = 0;
+                }
+            }
+        }
+
+        public static void CopyValues(NeuronLayer[] neuronLayers)
+        {
+            for (int x = 0; x < neuronLayers.Length; x++)
+            {
+                for (int y = 0; y < neuronLayers[x].neuron.Count; y++)
+                {
+                    for (int z = 0; z < neuronLayers[x].neuron[y].W_From.Length; z++)
+                    {
+                        neuronLayers[x].neuron[y].Old_W_From[z] = neuronLayers[x].neuron[y].W_From[z];
+                    }
+                }
             }
         }
     }
