@@ -18,7 +18,8 @@ namespace ConsoleApp4
             Network network = new Network();
             int layersNum = 3;
             int[] neuronNum = { 3, 5, 2 };
-            double learningRate = 0.1;
+            int batch = 0;
+            double learningRate = 0.5;
 
             NeuronLayer[] neuronNetwork = network.Init(layersNum, neuronNum, true);
             neuronNetwork[0].SetFunctionsAll(0);
@@ -40,18 +41,18 @@ namespace ConsoleApp4
             };
             /*
             double[,] InputValuesTraining = new double[2, 1] {
-            { 0},
-            { 1},
+            { 0.2},
+            { 0.7},
             };
 
             double[,] OutputValuesTraining = new double[2, 1] {
-            { 0},
-            { 1},
-            };
-            */
-            Console.WriteLine("\nEnter training counter:");
-            int count = Convert.ToInt32(Console.ReadLine());
-            network.Learn(neuronNetwork, InputValuesTraining, OutputValuesTraining, count, learningRate);
+            { 0.2},
+            { 0.7 }
+            };*/
+
+            Console.WriteLine("\nEnter epoch:");
+            int epoch = Convert.ToInt32(Console.ReadLine());
+            network.Learn(neuronNetwork, InputValuesTraining, OutputValuesTraining, epoch, batch, learningRate);
             //Utility.ShowResults(neuronNetwork);
         }
     }

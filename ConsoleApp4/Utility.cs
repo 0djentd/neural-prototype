@@ -50,7 +50,7 @@ namespace ConsoleApp4
             double error = 0;
             for (int i = 0; i<layer[^1].neuron.Count; i++)
             {
-                error += Math.Abs(layer[^1].neuron[i].Error);
+                error += Math.Abs(layer[^1].neuron[i].DeltaE_wrt_Output);
             }
             return error;
         }
@@ -71,18 +71,18 @@ namespace ConsoleApp4
             Console.WriteLine("========================");
             for (int i = 0; i < neuronLayers[^1].neuron.Count; i++)
             {
-                Console.Write("[" + i + "] V=" + Math.Round(neuronLayers[^1].neuron[i].Output, 2) + " E=" + Math.Round(neuronLayers[^1].neuron[i].Error, 2) + "\n");
+                Console.Write("[" + i + "] V=" + Math.Round(neuronLayers[^1].neuron[i].Output, 2) + " E=" + Math.Round(neuronLayers[^1].neuron[i].DeltaE_wrt_Output, 2) + "\n");
             }
             Console.WriteLine("Sum of errors are " + Math.Round(ErrorSum(neuronLayers), 4));
             Console.WriteLine("========================");
         }
 
-        public static double GetRandom(double neurones)
+        /*public double GetRandom(double neurones)
         {
             Random random = new Random();
             double number = (random.NextDouble() * 2.0 - 1.0) * Math.Sqrt(2.0 / neurones);
             Console.WriteLine("Generated " + number + " (" + neurones + ")");
             return number;
-        }
+        }*/
     }
 }

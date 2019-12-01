@@ -161,7 +161,10 @@ namespace ConsoleApp4
         {
             for (int i = 0; i < Parents.Length; i++)
             {
-                this.W_From[i] = Utility.GetRandom(Parents.Length);
+                Random random = new Random();
+                double number = (random.NextDouble() * 2.0 - 1.0) * Math.Sqrt(2.0 / this.Parents.Length);
+                Console.WriteLine("Generated " + number + " (" + Parents.Length + ")");
+                this.W_From[i] = number;
             }
         }
     }
