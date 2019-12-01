@@ -55,46 +55,53 @@ namespace ConsoleApp4
     public class Neuron
     {
         //for this neuron
-        private double value;
+        private double output;
+        private double input;
+        private double bias = 1;
+
+        //info
+        private NeuronLayer[] neuralNetwork;
         private Neuron[] targetNeurons;
         private Neuron[] parents;
-        private double bias = 0;
+
         //type of act. function
         private int functionType = 0;
         //k for parametric relu  etc
-        private double k = 0.1;
+        private double k = 0.5;
         //for softmax act. function
         private int layerNumber;
         private int neuronNumber;
 
         //for neuron's parents
-        private NeuronLayer[] neuralNetwork;
-        private double[] weightsFrom = new double[128];
+        private double[] w_From = new double[128];
         private double[] oldWeightsFrom = new double[128];
-        private double[] recivedValue = new double[128];
-        private double e;
+        private double[] recivedInput = new double[128];
+        private double[] deltaE_wrt_W = new double[128];
 
-        //for backpropagation
-        private double[] error = new double[128];
+        //neuron 
+        public double Input { get => input; set => input = value; }
+        public double Output { get => output; set => this.output = value; }
+        public double Bias { get => bias; set => bias = value; }
+        public double[] W_From { get => w_From; set => w_From = value; }
+        public double[] Old_W_From { get => oldWeightsFrom; set => oldWeightsFrom = value; }
+        public double[] RecivedInputFrom { get => recivedInput; set => recivedInput = value; }
 
-        private double[] delta = new double[128];
-
-        public double Value { get => value; set => this.value = value; }
+        //info
+        public NeuronLayer[] NeuralNetwork { get => neuralNetwork; set => neuralNetwork = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }
         public Neuron[] Parents { get => parents; set => parents = value; }
-        public double Bias { get => bias; set => bias = value; }
-        public double[] WeightsFrom { get => weightsFrom; set => weightsFrom = value; }
-        public double OutE { get => e; set => e = value; }
-        public double[] RecivedValueFrom { get => recivedValue; set => recivedValue = value; }
-        public double[] Error { get => error; set => error = value; }
-        public double[] OldWeightsFrom { get => oldWeightsFrom; set => oldWeightsFrom = value; }
-        public double OutD { get; internal set; }
-        public double[] Delta { get => delta; set => delta = value; }
-        public int FunctionType { get => functionType; set => functionType = value; }
-        public double K { get => k; set => k = value; }
         public int LayerNumber { get => layerNumber; set => layerNumber = value; }
         public int NeuronNumber { get => neuronNumber; set => neuronNumber = value; }
-        public NeuronLayer[] NeuralNetwork { get => neuralNetwork; set => neuralNetwork = value; }
+        
+        //functions
+        public int FunctionType { get => functionType; set => functionType = value; }
+        public double K { get => k; set => k = value; }
+
+        //for backpropagation
+        public double DeltaE_wrt_Output { get; internal set; }
+        public double DeltaE_wrt_In { get; internal set; }
+        public double[] DeltaE_wrt_W { get => deltaE_wrt_W; set => deltaE_wrt_W = value; }
+        public double Error { get; internal set; }
 
         //x is representing working neurone's number in working layer
         public void Work(int x)
@@ -104,31 +111,33 @@ namespace ConsoleApp4
             {
                 //Console.WriteLine("Target neuron weight is " + this.TargetNeurons[i].Weights[x]);
                 //Console.WriteLine("Worked out " + this.TargetNeurons[i].Value + this.Value * this.TargetNeurons[i].Weights[x] + "\n");
-                double aw = this.Value * this.TargetNeurons[i].WeightsFrom[x];
-                this.TargetNeurons[i].RecivedValueFrom[x] = aw;
-                this.TargetNeurons[i].Value = this.TargetNeurons[i].Value + aw;
+                double aw = this.Output * this.TargetNeurons[i].W_From[x];
+                this.TargetNeurons[i].RecivedInputFrom[x] = aw;
+                this.TargetNeurons[i].Output += aw;
             }
         }
 
         //activation functions and their derivatives
         public void Act()
         {
-            if (this.FunctionType == 1) this.Value = Functions.Sigmoid(this.Value + this.Bias);
-            else if (this.FunctionType == 2) this.Value = Functions.TanH(this.Value + this.Bias);
-            else if (this.FunctionType == 3) this.Value = Functions.ReLU(this.Value + this.Bias);
-            else if (this.FunctionType == 4) this.Value = Functions.LeReLU(this.Value + this.Bias);
-            else if (this.FunctionType == 5) this.Value = Functions.EReLU(this.Value + this.Bias, K);
-            else if (this.FunctionType == 6) this.Value = Functions.Softmax(this.NeuronNumber, NeuralNetwork[this.LayerNumber]);
+            this.Input = this.Output;
+            if (this.FunctionType == 0) this.Output = this.Output;
+            else if (this.FunctionType == 1) this.Output = Functions.Sigmoid(this.Output + this.Bias);
+            else if (this.FunctionType == 2) this.Output = Functions.TanH(this.Output + this.Bias);
+            else if (this.FunctionType == 3) this.Output = Functions.ReLU(this.Output + this.Bias);
+            else if (this.FunctionType == 4) this.Output = Functions.LeReLU(this.Output + this.Bias);
+            else if (this.FunctionType == 5) this.Output = Functions.EReLU(this.Output + this.Bias, K);
+            else if (this.FunctionType == 6) this.Output = Functions.Softmax(this.NeuronNumber, NeuralNetwork[this.LayerNumber]);
         }
 
         public double Derivative()
         {
             if (this.FunctionType == 0) return 1;
-            else if (this.FunctionType == 1) return Functions.SigmoidDerivative(this.Value + this.Bias);
-            else if (this.FunctionType == 2) return Functions.TanHDerivative(this.Value + this.Bias);
-            else if (this.FunctionType == 3) return Functions.ReLUDerivative(this.Value + this.Bias);
-            else if (this.FunctionType == 4) return Functions.LeReLUDerivative(this.Value + this.Bias);
-            else if (this.FunctionType == 5) return Functions.EReLUDerivative(this.Value + this.Bias, K);
+            else if (this.FunctionType == 1) return Functions.SigmoidDerivative(this.Output + this.Bias);
+            else if (this.FunctionType == 2) return Functions.TanHDerivative(this.Output + this.Bias);
+            else if (this.FunctionType == 3) return Functions.ReLUDerivative(this.Output + this.Bias);
+            else if (this.FunctionType == 4) return Functions.LeReLUDerivative(this.Output + this.Bias);
+            else if (this.FunctionType == 5) return Functions.EReLUDerivative(this.Output + this.Bias, K);
             else if (this.FunctionType == 6) return Functions.SoftmaxDerivative(this.NeuronNumber, NeuralNetwork[this.LayerNumber]);
             else return 0;
         }
@@ -137,7 +146,7 @@ namespace ConsoleApp4
         {
             for (int i = 0; i < Parents.Length; i++)
             {
-                this.WeightsFrom[i] = Utility.GetRandom();
+                this.W_From[i] = Utility.GetRandom(Parents.Length);
             }
         }
     }
