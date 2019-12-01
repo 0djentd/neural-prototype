@@ -17,7 +17,7 @@ namespace ConsoleApp4
         {
             Network network = new Network();
             int layersNum = 3;
-            int[] neuronNum = { 3, 2, 2 };
+            int[] neuronNum = { 3, 5, 2 };
             double learningRate = 0.1;
 
             NeuronLayer[] neuronNetwork = network.Init(layersNum, neuronNum, true);

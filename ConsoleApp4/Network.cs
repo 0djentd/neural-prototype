@@ -81,6 +81,7 @@ namespace ConsoleApp4
             {
                 for (int y = 0; y < layer[x].neuron.Count; y++)
                 {
+                    Console.WriteLine("Working " + x + " " + y);
                     /*if (x > 0)*/ layer[x].neuron[y].Act();
                     if (x < layer.Length - 1) layer[x].neuron[y].Work(y);
                 }
@@ -114,21 +115,23 @@ namespace ConsoleApp4
                     }
                 }
 
+                //add bias as a last element of layer
+                if (bias == true && x < layer.Length - 1)
+                {
+                    layer[x].AddBias();
+                }
+
                 //applies "target neurones" to all layers except last one
                 //note that this process is happening for previous layer to "x" layer because of object initialization process
                 if (x < layersNum && x != 0)
                 {
-                    for (int y = 0; y < neuronNum[x - 1]; y++)
+                    for (int y = 0; y < layer[x-1].neuron.Count; y++)
                     {
                         layer[x - 1].neuron[y].TargetNeurons = layer[x].neuron.ToArray();
                     }
                 }
 
-                //add bias as a last element of layer
-                if (bias == true && x < layer.Length-1)
-                {
-                    layer[x].AddBias();
-                }
+                
             }
             Utility.ShowNeuronMap(layer, false);
             return layer;
