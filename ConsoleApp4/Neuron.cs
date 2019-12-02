@@ -3,78 +3,13 @@ using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
-    public class NeuronLayer
-    {
-        public List<Neuron> neuron = new List<Neuron>();
-        private int layerNumber;
-        private int biasNeurons = 0;
-        private int assignedFunctions = 0;
-
-        public int LayerNumber { get => layerNumber; set => layerNumber = value; }
-        public int BiasNeurons { get => biasNeurons; set => biasNeurons = value; }
-        public int AssignedFunctions { get => assignedFunctions; set => assignedFunctions = value; }
-
-        public void SetFunctions(int count, int function)
-        {
-            int availableFunctions = this.neuron.Count - this.BiasNeurons - this.AssignedFunctions;
-            if (availableFunctions >= count)
-            {
-                for (int i = this.AssignedFunctions; i < count; i++)
-                {
-                    this.neuron[i].FunctionType = function;
-                    Console.WriteLine("Set "+layerNumber+" layer "+count+" neuron function to " + function);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Error assigning functions to neurons. Too many.");
-            }
-        }
-
-        public void SetFunctionsAll(int function)
-        {
-            for (int i = 0; i < this.neuron.Count - this.BiasNeurons; i++)
-            {
-                this.neuron[i].FunctionType = function;
-            }
-            Console.WriteLine("Set all " + layerNumber + " layer functions to " + function);
-        }
-
-        public void SetFunctionsAuto()
-        {
-            int availableFunctions = this.neuron.Count - this.BiasNeurons - this.AssignedFunctions;
-            for (int i = AssignedFunctions; i < availableFunctions / 3; i++)
-            {
-                this.neuron[i].FunctionType = 1;
-                this.neuron[i + 1].FunctionType = 2;
-                this.neuron[i + 2].FunctionType = 3;
-                this.AssignedFunctions += 3;
-                Console.WriteLine("Set "+layerNumber+" layer functions to sigmoid, tanh and relu");
-            }
-            for (int i = AssignedFunctions; i < (neuron.Count - this.BiasNeurons) % 3; i++)
-            {
-                this.neuron[i].FunctionType = 2;
-                this.AssignedFunctions += 1;
-                Console.WriteLine("Set function to tanh");
-            }
-        }
-
-        public void AddBias()
-        {
-            Console.WriteLine("Added bias to layer " + LayerNumber);
-            this.neuron.Add(new Neuron());
-            this.BiasNeurons += 1;
-            this.neuron[neuron.Count - 1].Bias = true;
-            this.neuron[neuron.Count - 1].Output = 1;
-        }
-    }
-
-    public class Neuron
+    class Neuron
     {
         //for this neuron
         private double output;
         private double input;
-        private bool bias=false;
+        private bool bias = false;
+        private int initType = 0;
 
         //info
         private NeuronLayer[] neuralNetwork;
@@ -109,7 +44,7 @@ namespace ConsoleApp4
         public Neuron[] Parents { get => parents; set => parents = value; }
         public int LayerNumber { get => layerNumber; set => layerNumber = value; }
         public int NeuronNumber { get => neuronNumber; set => neuronNumber = value; }
-        
+
         //functions
         public int FunctionType { get => functionType; set => functionType = value; }
         public double K { get => k; set => k = value; }
@@ -135,7 +70,7 @@ namespace ConsoleApp4
         public void Act()
         {
             this.Input = this.Output;
-            if (this.FunctionType == 0 || this.Bias==true) this.Output = this.Output;
+            if (this.FunctionType == 0 || this.Bias == true) this.Output = this.Output;
             else if (this.FunctionType == 1) this.Output = Functions.Sigmoid(this.Output);
             else if (this.FunctionType == 2) this.Output = Functions.TanH(this.Output);
             else if (this.FunctionType == 3) this.Output = Functions.ReLU(this.Output);
@@ -146,7 +81,7 @@ namespace ConsoleApp4
 
         public double Derivative()
         {
-            if (this.FunctionType == 0 || this.Bias==true) return 1;
+            if (this.FunctionType == 0 || this.Bias == true) return 1;
             else if (this.FunctionType == 1) return Functions.SigmoidDerivative(this.Output);
             else if (this.FunctionType == 2) return Functions.TanHDerivative(this.Output);
             else if (this.FunctionType == 3) return Functions.ReLUDerivative(this.Output);
@@ -163,9 +98,7 @@ namespace ConsoleApp4
                 for (int i = 0; i < this.Parents.Length; i++)
                 {
                     Random random = new Random();
-                    double number = (random.NextDouble()) * Math.Sqrt(2.0 / this.Parents.Length);
-                    //Console.WriteLine("Generated " + number + " (" + Parents.Length + ")");
-                    this.W_From[i] = number;
+                    this.W_From[i] = random.NextDouble() * Math.Sqrt(1.0 / this.Parents.Length);
                 }
             }
         }

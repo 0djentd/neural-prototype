@@ -16,8 +16,11 @@ namespace ConsoleApp4
 
         private static void Main()
         {
+            bool debug = false;
+
             Stopwatch sw = new Stopwatch();
             sw.Start();
+
             NeuralNetwork network = new NeuralNetwork();
             int layersNum = 4;
             int[] neuronNum = { 3, 3, 3, 1 };
@@ -65,11 +68,12 @@ namespace ConsoleApp4
 
             Console.WriteLine("\nEnter epoch:");
             int epoch = Convert.ToInt32(Console.ReadLine());
-            network.Learn(neuronNetwork, InputValuesTraining, OutputValuesTraining, epoch, batch, learningRate);
+            
+            network.Learn(neuronNetwork, InputValuesTraining, OutputValuesTraining, epoch, batch, learningRate, debug);
             network.Predict(neuronNetwork, InputValuesPredict);
+
             sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds);
-            //Utility.ShowResults(neuronNetwork);
+            Console.WriteLine("Elapsed "+sw.ElapsedMilliseconds+" milliseconds");
         }
     }
 }

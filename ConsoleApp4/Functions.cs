@@ -2,35 +2,8 @@
 
 namespace ConsoleApp4
 {
-    internal class Functions
+    class Functions
     {
-        /*
-        public static double Derivative(double x, int functionType)
-        {
-            if (functionType == 0) return 1;
-            else if (functionType == 1) return Functions.SigmoidDerivative(x);
-            else if (functionType == 2) return Functions.TanHDerivative(x);
-            else if (functionType == 3) return Functions.ReLUDerivative(x);
-            else if (functionType == 4) return Functions.LeReLUDerivative(x);
-            else if (functionType == 5)
-            {
-                Console.WriteLine("Function type error");
-                return 0;
-            }
-            else return 0;
-        }
-        /*
-        public double Derivative(double x, int functionType, double k)
-        {
-            if (functionType == 0) return 1;
-            else if (functionType == 1) return Functions.SigmoidDerivative(x);
-            else if (functionType == 2) return Functions.TanHDerivative(x);
-            else if (functionType == 3) return Functions.ReLUDerivative(x);
-            else if (functionType == 4) return Functions.LeReLUDerivative(x);
-            else if (functionType == 5) return Functions.EReLUDerivative(x, k);
-            else return 0;
-        }*/
-
         public static double Sigmoid(double x)
         {
             return 1 / (1 + Math.Exp(-x));
@@ -65,7 +38,7 @@ namespace ConsoleApp4
 
         public static double LeReLU(double x)
         {
-            if (x < 0) return x*0.1;
+            if (x < 0) return x * 0.1;
             return x;
         }
 
@@ -86,15 +59,17 @@ namespace ConsoleApp4
             if (x < 0) return x + k;
             else return 1;
         }
-        public static double Softmax(int neuronNum , NeuronLayer layer)
+
+        public static double Softmax(int neuronNum, NeuronLayer layer)
         {
             double expSum = 0;
-            for (int i = 0; i< layer.neuron.Count; i++)
+            for (int i = 0; i < layer.neuron.Count; i++)
             {
                 expSum += Math.Exp(layer.neuron[i].Output);
             }
             return Math.Exp(layer.neuron[neuronNum].Output) / expSum;
         }
+
         public static double SoftmaxDerivative(int neuronNum, NeuronLayer layer)
         {
             double expSum = 0;
@@ -103,7 +78,7 @@ namespace ConsoleApp4
                 expSum += Math.Exp(layer.neuron[i].Output);
             }
             double neuronExp = Math.Exp(layer.neuron[neuronNum].Output);
-            return (neuronExp*(expSum-neuronExp))/Math.Pow(expSum, 2);
+            return (neuronExp * (expSum - neuronExp)) / Math.Pow(expSum, 2);
         }
     }
 }
