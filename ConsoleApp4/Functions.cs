@@ -4,6 +4,7 @@ namespace ConsoleApp4
 {
     internal class Functions
     {
+        /*
         public static double Derivative(double x, int functionType)
         {
             if (functionType == 0) return 1;

@@ -22,6 +22,7 @@ namespace ConsoleApp4
                 for (int i = this.AssignedFunctions; i < count; i++)
                 {
                     this.neuron[i].FunctionType = function;
+                    Console.WriteLine("Set "+layerNumber+" layer "+count+" neuron function to " + function);
                 }
             }
             else
@@ -36,7 +37,7 @@ namespace ConsoleApp4
             {
                 this.neuron[i].FunctionType = function;
             }
-            Console.WriteLine("Set all functions to " + function);
+            Console.WriteLine("Set all " + layerNumber + " layer functions to " + function);
         }
 
         public void SetFunctionsAuto()
@@ -48,7 +49,7 @@ namespace ConsoleApp4
                 this.neuron[i + 1].FunctionType = 2;
                 this.neuron[i + 2].FunctionType = 3;
                 this.AssignedFunctions += 3;
-                Console.WriteLine("Set functions to sigmoid, tanh and relu");
+                Console.WriteLine("Set "+layerNumber+" layer functions to sigmoid, tanh and relu");
             }
             for (int i = AssignedFunctions; i < (neuron.Count - this.BiasNeurons) % 3; i++)
             {
@@ -63,7 +64,7 @@ namespace ConsoleApp4
             Console.WriteLine("Added bias to layer " + LayerNumber);
             this.neuron.Add(new Neuron());
             this.BiasNeurons += 1;
-            this.neuron[neuron.Count-1].Bias = true;
+            this.neuron[neuron.Count - 1].Bias = true;
             this.neuron[neuron.Count - 1].Output = 1;
         }
     }
@@ -122,11 +123,8 @@ namespace ConsoleApp4
         //x is representing working neurone's number in working layer
         public void Work(int x)
         {
-            //Console.WriteLine("\nNeuron started. Value is " + this.Value + "\n");
             for (int i = 0; i < this.TargetNeurons.GetLength(0); i++)
             {
-                //Console.WriteLine("Target neuron weight is " + this.TargetNeurons[i].Weights[x]);
-                //Console.WriteLine("Worked out " + this.TargetNeurons[i].Value + this.Value * this.TargetNeurons[i].Weights[x] + "\n");
                 double aw = this.Output * this.TargetNeurons[i].W_From[x];
                 this.TargetNeurons[i].RecivedInputFrom[x] = aw;
                 this.TargetNeurons[i].Output += aw;
@@ -165,8 +163,8 @@ namespace ConsoleApp4
                 for (int i = 0; i < this.Parents.Length; i++)
                 {
                     Random random = new Random();
-                    double number = (random.NextDouble() * 2.0 - 1.0) * Math.Sqrt(2.0 / this.Parents.Length);
-                    Console.WriteLine("Generated " + number + " (" + Parents.Length + ")");
+                    double number = (random.NextDouble()) * Math.Sqrt(2.0 / this.Parents.Length);
+                    //Console.WriteLine("Generated " + number + " (" + Parents.Length + ")");
                     this.W_From[i] = number;
                 }
             }

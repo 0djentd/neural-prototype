@@ -16,29 +16,39 @@ namespace ConsoleApp4
         private static void Main()
         {
             Network network = new Network();
-            int layersNum = 3;
-            int[] neuronNum = { 3, 5, 2 };
+            int layersNum = 4;
+            int[] neuronNum = { 3, 3, 3, 1 };
             int batch = 0;
-            double learningRate = 0.1;
+            double learningRate = 0.5;
 
             NeuronLayer[] neuronNetwork = network.Init(layersNum, neuronNum, true);
+            Utility.ShowNeuronMap(neuronNetwork, false);
+            Network.Randomize(neuronNetwork);
+
             neuronNetwork[0].SetFunctionsAll(0);
-            neuronNetwork[1].SetFunctionsAll(2);
-            neuronNetwork[2].SetFunctionsAll(2);
-            
+            neuronNetwork[1].SetFunctionsAll(4);
+            neuronNetwork[2].SetFunctionsAll(4);
+            neuronNetwork[2].SetFunctionsAll(4);
+
+
             double[,] InputValuesTraining = new double[4, 3] {
-            { -1, 1, 1},
+            { 0, 1, 1},
             { 1, 0, 1},
             { 1, 1, 1},
-            { 0, 1, 1}
+            { 0, 0, 1}
             };
 
-            double[,] OutputValuesTraining = new double[4, 2] {
-            { -1, -1},
-            { 1, 0},
-            { 1, 0},
-            { 0, 0}
+            double[,] InputValuesPredict = new double[1, 3] {
+            { 1, 0, 0},
             };
+
+            double[,] OutputValuesTraining = new double[4, 1] {
+            { 0},
+            { 1},
+            { 1},
+            { 0}
+            };
+
             /*
             double[,] InputValuesTraining = new double[2, 1] {
             { 0.2},
@@ -53,6 +63,7 @@ namespace ConsoleApp4
             Console.WriteLine("\nEnter epoch:");
             int epoch = Convert.ToInt32(Console.ReadLine());
             network.Learn(neuronNetwork, InputValuesTraining, OutputValuesTraining, epoch, batch, learningRate);
+            network.Predict(neuronNetwork, InputValuesPredict);
             //Utility.ShowResults(neuronNetwork);
         }
     }
