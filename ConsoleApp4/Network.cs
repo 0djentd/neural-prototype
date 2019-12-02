@@ -2,7 +2,7 @@
 
 namespace ConsoleApp4
 {
-    internal class Network
+    public class Network
     {
         public void Backpropagation(NeuronLayer[] layer, double[] correctOutput, double learningRate)
         {
@@ -12,12 +12,6 @@ namespace ConsoleApp4
             Utility.ShowNeuronMap(layer, true);
             double correction = Correction(layer, learningRate);
             Console.WriteLine("total amoun of correction is "+correction);
-            if (correction < 0.0005) Randomize(layer);
-            if (Utility.ErrorSum(layer) > 5)
-            {
-                Console.WriteLine("Need to reinitialize neurons.");
-                Randomize(layer);
-            }
             ClearGradient(layer);
         }
         public double Gradient(NeuronLayer[] layer, double[] correctOutput)
@@ -50,7 +44,6 @@ namespace ConsoleApp4
                 }
                 --l;
             }
-            if (total_Error > layer[^1].neuron.Count) Randomize(layer);
             return total_Error;
         }
 

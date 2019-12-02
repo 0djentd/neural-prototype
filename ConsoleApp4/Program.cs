@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace ConsoleApp4
 {
@@ -15,6 +16,8 @@ namespace ConsoleApp4
 
         private static void Main()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             Network network = new Network();
             int layersNum = 4;
             int[] neuronNum = { 3, 3, 3, 1 };
@@ -25,10 +28,10 @@ namespace ConsoleApp4
             Utility.ShowNeuronMap(neuronNetwork, false);
             Network.Randomize(neuronNetwork);
 
-            neuronNetwork[0].SetFunctionsAll(0);
-            neuronNetwork[1].SetFunctionsAll(4);
-            neuronNetwork[2].SetFunctionsAll(4);
-            neuronNetwork[2].SetFunctionsAll(4);
+            neuronNetwork[0].SetFunctionsAll(4);
+            neuronNetwork[1].SetFunctionsAll(2);
+            neuronNetwork[2].SetFunctionsAll(2);
+            neuronNetwork[2].SetFunctionsAll(2);
 
 
             double[,] InputValuesTraining = new double[4, 3] {
@@ -64,6 +67,8 @@ namespace ConsoleApp4
             int epoch = Convert.ToInt32(Console.ReadLine());
             network.Learn(neuronNetwork, InputValuesTraining, OutputValuesTraining, epoch, batch, learningRate);
             network.Predict(neuronNetwork, InputValuesPredict);
+            sw.Stop();
+            Console.WriteLine(sw.ElapsedMilliseconds);
             //Utility.ShowResults(neuronNetwork);
         }
     }
