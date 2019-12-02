@@ -55,17 +55,6 @@ namespace ConsoleApp4
             return error;
         }
 
-        public static Neuron[] ArrayShortener(Neuron[] neurons, int biases)
-        {
-            Neuron[] a = new Neuron[neurons.Length - biases];
-            for (int i = 0; i< a.Length; i++)
-            {
-                a[i] = neurons[i];
-                Console.WriteLine(a[i].Bias);
-            }
-            return a;
-        }
-
         public static void ShowResults(NeuronLayer[] neuronLayers)
         {
             Console.WriteLine("========================");

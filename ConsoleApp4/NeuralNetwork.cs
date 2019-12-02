@@ -2,7 +2,7 @@
 
 namespace ConsoleApp4
 {
-    public class Network
+    public class NeuralNetwork
     {
         public void Backpropagation(NeuronLayer[] layer, double[] correctOutput, double learningRate)
         {
@@ -35,6 +35,7 @@ namespace ConsoleApp4
                         layer[l].neuron[j].DeltaE_wrt_W[i] = layer[l].neuron[j].RecivedInputFrom[i] * layer[l].neuron[j].DeltaE_wrt_In * layer[l].neuron[j].DeltaE_wrt_Output;
                     }
                 }
+
                 for (int i = 0; i < layer[l - 1].neuron.Count; i++)
                 {
                     for (int j = 0; j < layer[l].neuron.Count - layer[l].BiasNeurons; j++)
@@ -208,7 +209,6 @@ namespace ConsoleApp4
                 }
                 Feedforward(layer);
                 Backpropagation(layer, outputValue, learningRate);
-                if (Utility.ErrorSum(layer)>10/*| Utility.ErrorSum(layer)<0.05*/) i = epoch * inputData.GetLength(0); 
                 ClearValues(layer);
                 if (countIn == inputData.GetLength(0)-1) countIn = 0;
                 else countIn++;

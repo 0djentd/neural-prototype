@@ -18,7 +18,7 @@ namespace ConsoleApp4
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            Network network = new Network();
+            NeuralNetwork network = new NeuralNetwork();
             int layersNum = 4;
             int[] neuronNum = { 3, 3, 3, 1 };
             int batch = 0;
@@ -26,7 +26,7 @@ namespace ConsoleApp4
 
             NeuronLayer[] neuronNetwork = network.Init(layersNum, neuronNum, true);
             Utility.ShowNeuronMap(neuronNetwork, false);
-            Network.Randomize(neuronNetwork);
+            NeuralNetwork.Randomize(neuronNetwork);
 
             neuronNetwork[0].SetFunctionsAll(4);
             neuronNetwork[1].SetFunctionsAll(2);
