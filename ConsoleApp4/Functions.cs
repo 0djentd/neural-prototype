@@ -30,9 +30,9 @@ namespace ConsoleApp4
             return x;
         }
 
-        public static double ReLUDerivative(double x)
+        public static double ReLUDerivative(double relu)
         {
-            if (x < 0) return 0;
+            if (relu < 0) return 0;
             return 1;
         }
 
@@ -42,9 +42,9 @@ namespace ConsoleApp4
             return x;
         }
 
-        public static double LeReLUDerivative(double x)
+        public static double LeReLUDerivative(double lerelu)
         {
-            if (x < 0) return 0.1;
+            if (lerelu < 0) return 0.1;
             return 1;
         }
 
@@ -54,9 +54,9 @@ namespace ConsoleApp4
             return x;
         }
 
-        public static double EReLUDerivative(double x, double k)
+        public static double EReLUDerivative(double erelu, double k)
         {
-            if (x < 0) return x + k;
+            if (erelu < 0) return erelu + k;
             else return 1;
         }
 

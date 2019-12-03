@@ -23,36 +23,36 @@ namespace ConsoleApp4
 
             NeuralNetwork network = new NeuralNetwork();
             int layersNum = 4;
-            int[] neuronNum = { 3, 3, 3, 1 };
+            int[] neuronNum = { 3, 5, 4, 2 };
             int batch = 0;
-            double learningRate = 0.5;
+            double learningRate = 0.3;
 
             NeuronLayer[] neuronNetwork = network.Init(layersNum, neuronNum, true);
             Utility.ShowNeuronMap(neuronNetwork, false);
             NeuralNetwork.Randomize(neuronNetwork);
 
-            neuronNetwork[0].SetFunctionsAll(4);
+            neuronNetwork[0].SetFunctionsAll(2);
             neuronNetwork[1].SetFunctionsAll(2);
             neuronNetwork[2].SetFunctionsAll(2);
-            neuronNetwork[2].SetFunctionsAll(2);
+            neuronNetwork[3].SetFunctionsAll(2);
 
 
             double[,] InputValuesTraining = new double[4, 3] {
             { 0, 1, 1},
+            { 1, 0, 0},
             { 1, 0, 1},
-            { 1, 1, 1},
-            { 0, 0, 1}
+            { 0, 1, 1}
             };
 
             double[,] InputValuesPredict = new double[1, 3] {
             { 1, 0, 0},
             };
 
-            double[,] OutputValuesTraining = new double[4, 1] {
-            { 0},
-            { 1},
-            { 1},
-            { 0}
+            double[,] OutputValuesTraining = new double[4, 2] {
+            { 0, 1},
+            { 1, 0},
+            { 1, 0},
+            { 0, 1}
             };
 
             /*

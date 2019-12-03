@@ -106,17 +106,17 @@ namespace ConsoleApp4
             Optimize(layer, learningRate);
         }
 
-        public double Optimize(NeuronLayer[] layers, double learningRate)
+        public double Optimize(NeuronLayer[] layer, double learningRate)
         {
             double amount = 0;
-            for (int j = layers.Length - 1; j > 0;)
+            for (int j = layer.Length - 1; j > 0;)
             {
-                for (int i = 0; i < layers[j].neuron.Count - layers[j].BiasNeurons; i++)
+                for (int i = 0; i < layer[j].neuron.Count - layer[j].BiasNeurons; i++)
                 {
-                    for (int z = 0; z < layers[j - 1].neuron.Count; z++)
+                    for (int z = 0; z < layer[j - 1].neuron.Count; z++)
                     {
-                        layers[j].neuron[i].W_From[z] -= (layers[j].neuron[i].DeltaE_wrt_W[z] * learningRate);
-                        amount = layers[j].neuron[i].W_From[z] - layers[j].neuron[i].Old_W_From[z];
+                        layer[j].neuron[i].W_From[z] -= (layer[j].neuron[i].DeltaE_wrt_W[z] * learningRate);
+                        amount = layer[j].neuron[i].W_From[z] - layer[j].neuron[i].Old_W_From[z];
                     }
                 }
                 --j;

@@ -98,7 +98,7 @@ namespace ConsoleApp4
                 for (int i = 0; i < this.Parents.Length; i++)
                 {
                     Random random = new Random();
-                    this.W_From[i] = random.NextDouble() * Math.Sqrt(1.0 / this.Parents.Length);
+                    this.W_From[i] = random.NextDouble()*2-1 * Math.Sqrt(1.0 / this.Parents.Length);
                 }
             }
         }

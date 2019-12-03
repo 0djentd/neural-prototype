@@ -63,21 +63,21 @@ namespace ConsoleApp4
         }
 
 
-        public static void Clear(NeuronLayer[] layers)
+        public static void Clear(NeuronLayer[] layer)
         {
-            for (int j = layers.Length - 1; j >= 0; j--)
+            for (int j = layer.Length - 1; j >= 0; j--)
             {
-                for (int i = 0; i < layers[j].neuron.Count; i++)
+                for (int i = 0; i < layer[j].neuron.Count; i++)
                 {
-                    layers[j].neuron[i].DeltaE_wrt_Output = 0;
-                    layers[j].neuron[i].DeltaE_wrt_In = 0;
+                    layer[j].neuron[i].DeltaE_wrt_Output = 0;
+                    layer[j].neuron[i].DeltaE_wrt_In = 0;
                     if (j > 0)
                     {
-                        for (int z = 0; z < layers[j - 1].neuron.Count; z++)
+                        for (int z = 0; z < layer[j - 1].neuron.Count; z++)
                         {
-                            layers[j].neuron[i].Old_W_From[z] = 0;
-                            layers[j].neuron[i].DeltaE_wrt_W[z] = 0;
-                            layers[j].neuron[i].RecivedInputFrom[z] = 0;
+                            layer[j].neuron[i].Old_W_From[z] = 0;
+                            layer[j].neuron[i].DeltaE_wrt_W[z] = 0;
+                            layer[j].neuron[i].RecivedInputFrom[z] = 0;
                         }
                     }
                 }
