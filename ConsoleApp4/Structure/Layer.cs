@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleApp4
 {
-    class NeuronLayer
+    class Layer
     {
         public List<Neuron> neuron = new List<Neuron>();
         private int layerNumber;

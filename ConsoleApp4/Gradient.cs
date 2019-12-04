@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
     static class Gradient
     {
-        public static double Calculate(NeuronLayer[] layer, double[] correctOutput)
+        public static double Calculate(List<Layer> layer, double[] correctOutput)
         {
             double total_Error = 0;
-            for (int l = layer.Length - 1; l > 0;)
+            for (int l = layer.Count - 1; l > 0;)
             {
                 for (int j = 0; j < layer[l].neuron.Count - layer[l].BiasNeurons; j++)
                 {
-                    if (l == layer.Length - 1)
+                    if (l == layer.Count - 1)
                     {
                         layer[l].neuron[j].Error = correctOutput[j] - layer[l].neuron[j].Output;
                         total_Error += 1 / 2 * Math.Pow(layer[l].neuron[j].Error, 2);
@@ -39,14 +40,14 @@ namespace ConsoleApp4
         }
 
 
-        public static void Show(NeuronLayer[] layer)
+        public static void Show(List<Layer> layer)
         {
-            for (int l = layer.Length - 1; l > 0;)
+            for (int l = layer.Count - 1; l > 0;)
             {
                 Console.WriteLine(l + " layer backpropagation");
                 for (int j = 0; j < layer[l].neuron.Count; j++)
                 {
-                    if (l == layer.Length - 1)
+                    if (l == layer.Count - 1)
                     {
                         Console.WriteLine("[" + j + "] Error " + layer[l].neuron[j].Error);
                     }
@@ -63,9 +64,9 @@ namespace ConsoleApp4
         }
 
 
-        public static void Clear(NeuronLayer[] layer)
+        public static void Clear(List<Layer> layer)
         {
-            for (int j = layer.Length - 1; j >= 0; j--)
+            for (int j = layer.Count - 1; j >= 0; j--)
             {
                 for (int i = 0; i < layer[j].neuron.Count; i++)
                 {

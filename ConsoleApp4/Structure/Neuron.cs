@@ -12,7 +12,7 @@ namespace ConsoleApp4
         private int initType = 0;
 
         //info
-        private NeuronLayer[] neuralNetwork;
+        private List<Layer> neuralNetwork;
         private Neuron[] targetNeurons;
         private Neuron[] parents;
 
@@ -39,7 +39,7 @@ namespace ConsoleApp4
         public double[] RecivedInputFrom { get => recivedInput; set => recivedInput = value; }
 
         //info
-        public NeuronLayer[] NeuralNetwork { get => neuralNetwork; set => neuralNetwork = value; }
+        public List<Layer> NeuralNetwork { get => neuralNetwork; set => neuralNetwork = value; }
         public Neuron[] TargetNeurons { get => targetNeurons; set => targetNeurons = value; }
         public Neuron[] Parents { get => parents; set => parents = value; }
         public int LayerNumber { get => layerNumber; set => layerNumber = value; }

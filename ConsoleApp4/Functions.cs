@@ -60,7 +60,7 @@ namespace ConsoleApp4
             else return 1;
         }
 
-        public static double Softmax(int neuronNum, NeuronLayer layer)
+        public static double Softmax(int neuronNum, Layer layer)
         {
             double expSum = 0;
             for (int i = 0; i < layer.neuron.Count; i++)
@@ -70,7 +70,7 @@ namespace ConsoleApp4
             return Math.Exp(layer.neuron[neuronNum].Output) / expSum;
         }
 
-        public static double SoftmaxDerivative(int neuronNum, NeuronLayer layer)
+        public static double SoftmaxDerivative(int neuronNum, Layer layer)
         {
             double expSum = 0;
             for (int i = 0; i < layer.neuron.Count; i++)
