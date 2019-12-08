@@ -1,21 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
-    class NeuralNetwork
+    class Network
     {
-        //creating objects and giving them some info about other objects
-        public NeuronLayer[] Init(int layersNum, int[] neuronNum, bool bias)
+        public List<Layer> layer = new List<Layer>();
+        public int layersCount;
+        //public List<int> neuronCount = new List<int>();
+        public bool biased;
+
+        public Network(int layersCount, int[] neuronCount, bool biased)
         {
-            //Initializing array of layers (which is arrays of neurones)
-            NeuronLayer[] layer = new NeuronLayer[layersNum];
-            for (int x = 0; x < layer.Length; x++)
+            this.layersCount = layersCount;
+            this.biased = biased;
+            // Initializing array of layers(which is arrays of neurones)
+            for (int x = 0; x < layersCount; x++)
             {
                 //init layer, which is array of neurones
-                layer[x] = new NeuronLayer();
+                layer.Add(new Layer());
                 layer[x].LayerNumber = x;
+
                 //init neurons
-                for (int y = 0; y < neuronNum[x]; y++)
+                for (int y = 0; y < neuronCount[x]; y++)
                 {
                     //init neuron
                     layer[x].neuron.Add(new Neuron());
@@ -31,14 +38,14 @@ namespace ConsoleApp4
                 }
 
                 //add bias as a last element of layer
-                if (bias == true && x < layer.Length - 1)
+                if (biased == true && x < layer.Count - 1)
                 {
                     layer[x].AddBias();
                 }
 
                 //applies "target neurones" to all layers except last one
                 //note that this process is happening for previous layer to "x" layer because of object initialization process
-                if (x < layersNum && x != 0)
+                if (x < layersCount && x != 0)
                 {
                     for (int y = 0; y < layer[x - 1].neuron.Count; y++)
                     {
@@ -46,11 +53,9 @@ namespace ConsoleApp4
                     }
                 }
             }
-            return layer;
         }
 
-
-        public void Learn(NeuronLayer[] layer, double[,] inputData, double[,] outputData, int epoch, int batch, double learningRate, bool debug)
+        public void Learn(double[,] inputData, double[,] outputData, int epoch, int batch, double learningRate, bool debug)
         {
             int countIn = 0;
             double[] CorrectOutput = new double[layer[^1].neuron.Count - layer[^1].BiasNeurons];
@@ -73,28 +78,28 @@ namespace ConsoleApp4
                     CorrectOutput[h] = outputData[countIn, h];
                 }
 
-                Feedforward(layer);
-                Backpropagation(layer, CorrectOutput, learningRate, debug);
+                Feedforward();
+                Backpropagation(CorrectOutput, learningRate, debug);
 
                 if (countIn == inputData.GetLength(0) - 1) countIn = 0;
                 else countIn++;
             }
         }
 
-        public void Feedforward(NeuronLayer[] layer)
+        public void Feedforward()
         {
-            for (int x = 0; x < layer.Length; x++)
+            for (int x = 0; x < layer.Count; x++)
             {
                 for (int y = 0; y < layer[x].neuron.Count; y++)
                 {
                     layer[x].neuron[y].Act();
-                    if (x < layer.Length - 1) layer[x].neuron[y].Work(y);
+                    if (x < layer.Count - 1) layer[x].neuron[y].Work(y);
                 }
             }
         }
 
 
-        public void Backpropagation(NeuronLayer[] layer, double[] correctOutput, double learningRate, bool debug)
+        public void Backpropagation(double[] correctOutput, double learningRate, bool debug)
         {
             Utility.BackupSynapseValues(layer);
             Gradient.Calculate(layer, correctOutput);
@@ -103,13 +108,13 @@ namespace ConsoleApp4
                 Gradient.Show(layer);
                 Utility.ShowNeuronMap(layer, true);
             }
-            Optimize(layer, learningRate);
+            Optimize(learningRate);
         }
 
-        public double Optimize(NeuronLayer[] layer, double learningRate)
+        public double Optimize(double learningRate)
         {
             double amount = 0;
-            for (int j = layer.Length - 1; j > 0;)
+            for (int j = layer.Count - 1; j > 0;)
             {
                 for (int i = 0; i < layer[j].neuron.Count - layer[j].BiasNeurons; i++)
                 {
@@ -124,7 +129,7 @@ namespace ConsoleApp4
             return amount;
         }
 
-        public void Predict(NeuronLayer[] layer, double[,] inputData)
+        public void Predict(double[,] inputData)
         {
             Utility.ClearInOutValues(layer);
             Gradient.Clear(layer);
@@ -134,13 +139,13 @@ namespace ConsoleApp4
                 layer[0].neuron[h].Output = inputData[countIn, h];
             }
             Console.WriteLine("Feedforwarding new input data...");
-            Feedforward(layer);
+            Feedforward();
             Utility.ShowNeuronMap(layer, true);
         }
 
-        public static void Randomize(NeuronLayer[] layer)
+        public void Randomize()
         {
-            for (int l = 1; l < layer.Length; l++)
+            for (int l = 1; l < layer.Count; l++)
             {
                 for (int i = 0; i < layer[l].neuron.Count; i++)
                 {

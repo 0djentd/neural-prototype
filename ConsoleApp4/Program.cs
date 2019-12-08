@@ -1,4 +1,5 @@
 ﻿using System;
+
 using System.Diagnostics;
 
 namespace ConsoleApp4
@@ -21,25 +22,25 @@ namespace ConsoleApp4
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            NeuralNetwork network = new NeuralNetwork();
             int layersNum = 4;
-            int[] neuronNum = { 3, 5, 4, 2 };
+            int[] neuronNum = { 3, 5, 4, 1 };
             int batch = 0;
             double learningRate = 0.3;
+            bool biased = true;
+            Network network = new Network(layersNum, neuronNum, biased);
 
-            NeuronLayer[] neuronNetwork = network.Init(layersNum, neuronNum, true);
-            Utility.ShowNeuronMap(neuronNetwork, false);
-            NeuralNetwork.Randomize(neuronNetwork);
+            Utility.ShowNeuronMap(network.layer, false);
+            network.Randomize();
 
-            neuronNetwork[0].SetFunctionsAll(2);
-            neuronNetwork[1].SetFunctionsAll(2);
-            neuronNetwork[2].SetFunctionsAll(2);
-            neuronNetwork[3].SetFunctionsAll(2);
+            network.layer[0].SetFunctionsAll(2);
+            network.layer[1].SetFunctionsAll(2);
+            network.layer[2].SetFunctionsAll(2);
+            network.layer[3].SetFunctionsAll(2);
 
 
             double[,] InputValuesTraining = new double[4, 3] {
             { 0, 1, 1},
-            { 1, 0, 0},
+            { 1, 1, 0},
             { 1, 0, 1},
             { 0, 1, 1}
             };
@@ -48,11 +49,11 @@ namespace ConsoleApp4
             { 1, 0, 0},
             };
 
-            double[,] OutputValuesTraining = new double[4, 2] {
-            { 0, 1},
-            { 1, 0},
-            { 1, 0},
-            { 0, 1}
+            double[,] OutputValuesTraining = new double[4, 1] {
+            { 0},
+            { 1},
+            { 1},
+            { 0}
             };
 
             /*
@@ -69,8 +70,8 @@ namespace ConsoleApp4
             Console.WriteLine("\nEnter epoch:");
             int epoch = Convert.ToInt32(Console.ReadLine());
             
-            network.Learn(neuronNetwork, InputValuesTraining, OutputValuesTraining, epoch, batch, learningRate, debug);
-            network.Predict(neuronNetwork, InputValuesPredict);
+            network.Learn(InputValuesTraining, OutputValuesTraining, epoch, batch, learningRate, debug);
+            network.Predict(InputValuesPredict);
 
             sw.Stop();
             Console.WriteLine("Elapsed "+sw.ElapsedMilliseconds+" milliseconds");

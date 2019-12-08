@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
-    internal class Utility
+    class Utility
     {
-        public static void ShowNeuronMap(NeuronLayer[] layer, bool showOutput)
+        public static void ShowNeuronMap(List<Layer> layer, bool showOutput)
         {
             Console.WriteLine("\n========= Neuron map ========\n");
-            for (int x = 0; x < layer.Length; x++)
+            for (int x = 0; x < layer.Count; x++)
             {
-                if (showOutput == true) x = layer.Length - 1;
+                if (showOutput == true) x = layer.Count - 1;
                 Console.Write("----- Layer [" + x + "] -----\n\n");
                 for (int y = 0; y < layer[x].neuron.Count; y++)
                 {
@@ -20,7 +21,7 @@ namespace ConsoleApp4
                     }
                     Console.Write("O=(" + Math.Round(layer[x].neuron[y].Output, 2) + ") ");
                     Console.Write("I=(" + Math.Round(layer[x].neuron[y].Input, 2) + ") ");
-                    if (x < layer.Length - 1)
+                    if (x < layer.Count - 1)
                     {
                         Console.Write("\n");
                     }
@@ -50,7 +51,7 @@ namespace ConsoleApp4
             Console.WriteLine();
         }
 
-        public static double ErrorSum(NeuronLayer[] layer)
+        public static double ErrorSum(List<Layer> layer)
         {
             double error = 0;
             for (int i = 0; i < layer[^1].neuron.Count; i++)
@@ -60,7 +61,7 @@ namespace ConsoleApp4
             return error;
         }
 
-        public static void ShowResults(NeuronLayer[] layer)
+        public static void ShowResults(List<Layer> layer)
         {
             Console.WriteLine("========================");
             for (int i = 0; i < layer[^1].neuron.Count; i++)
@@ -71,9 +72,9 @@ namespace ConsoleApp4
             Console.WriteLine("========================");
         }
 
-        public static void ClearInOutValues(NeuronLayer[] layer)
+        public static void ClearInOutValues(List<Layer> layer)
         {
-            for (int x = 0; x < layer.Length; x++)
+            for (int x = 0; x < layer.Count; x++)
             {
                 for (int y = 0; y < layer[x].neuron.Count - layer[x].BiasNeurons; y++)
                 {
@@ -83,9 +84,9 @@ namespace ConsoleApp4
             }
         }
 
-        public static void BackupSynapseValues(NeuronLayer[] layer)
+        public static void BackupSynapseValues(List<Layer> layer)
         {
-            for (int x = 0; x < layer.Length; x++)
+            for (int x = 0; x < layer.Count; x++)
             {
                 for (int y = 0; y < layer[x].neuron.Count - layer[x].BiasNeurons; y++) //??
                 {
