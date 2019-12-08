@@ -23,11 +23,11 @@ namespace ConsoleApp4
             sw.Start();
 
             int layersNum = 4;
-            int[] neuronNum = { 3, 5, 4, 2 };
+            int[] neuronNum = { 3, 5, 4, 1 };
             int batch = 0;
             double learningRate = 0.3;
             bool biased = true;
-            FeedforwardNeuralNetwork network = new FeedforwardNeuralNetwork(layersNum, neuronNum, biased);
+            Network network = new Network(layersNum, neuronNum, biased);
 
             Utility.ShowNeuronMap(network.layer, false);
             network.Randomize();
@@ -40,7 +40,7 @@ namespace ConsoleApp4
 
             double[,] InputValuesTraining = new double[4, 3] {
             { 0, 1, 1},
-            { 1, 0, 0},
+            { 1, 1, 0},
             { 1, 0, 1},
             { 0, 1, 1}
             };
@@ -49,11 +49,11 @@ namespace ConsoleApp4
             { 1, 0, 0},
             };
 
-            double[,] OutputValuesTraining = new double[4, 2] {
-            { 0, 1},
-            { 1, 0},
-            { 1, 0},
-            { 0, 1}
+            double[,] OutputValuesTraining = new double[4, 1] {
+            { 0},
+            { 1},
+            { 1},
+            { 0}
             };
 
             /*

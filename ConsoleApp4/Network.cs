@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace ConsoleApp4
 {
-    class FeedforwardNeuralNetwork
+    class Network
     {
         public List<Layer> layer = new List<Layer>();
         public int layersCount;
         //public List<int> neuronCount = new List<int>();
         public bool biased;
 
-        public FeedforwardNeuralNetwork(int layersCount, int[] neuronCount, bool biased)
+        public Network(int layersCount, int[] neuronCount, bool biased)
         {
             this.layersCount = layersCount;
             this.biased = biased;
